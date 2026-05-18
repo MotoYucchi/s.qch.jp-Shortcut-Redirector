@@ -1,23 +1,71 @@
 const fs = require('fs');
 const path = require('path');
 
-// 設定ファイルと出力先
+// 設定ファイルとパスの定義
 const links = require('./links.json');
+const srcDir = path.join(__dirname, 'src');
 const distDir = path.join(__dirname, 'dist');
 
-// distフォルダを初期化
+// 1. distフォルダを完全に初期化（クリーンアップ）
 if (fs.existsSync(distDir)) fs.rmSync(distDir, { recursive: true });
 fs.mkdirSync(distDir);
 
-// 独自ドメイン用のCNAMEファイルをdistにコピー（qgr.jpを設定）
+// 2. フォルダを丸ごとコピーする関数
+function copyFolderSync(from, to) {
+  if (!fs.existsSync(from)) return;
+  fs.mkdirSync(to, { recursive: true });
+  fs.readdirSync(from).forEach(element => {
+    const fromPath = path.join(from, element);
+    const toPath = path.join(to, element);
+    
+    // ルートにある特定のファイルはスキップ（個別に処理するため）
+    if (from === srcDir && (element === 'home.html' || element === '404.html')) {
+      return;
+    }
+
+    if (fs.lstatSync(fromPath).isDirectory()) {
+      copyFolderSync(fromPath, toPath);
+    } else {
+      fs.copyFileSync(fromPath, toPath);
+    }
+  });
+}
+
+// src内のファイルをdistにコピー（home.html / 404.html 以外）
+if (fs.existsSync(srcDir)) {
+  copyFolderSync(srcDir, distDir);
+}
+
+// 3. ルート用の特別処理
+// src/home.html -> dist/index.html (トップページ化)
+const srcHome = path.join(srcDir, 'home.html');
+if (fs.existsSync(srcHome)) {
+  fs.copyFileSync(srcHome, path.join(distDir, 'index.html'));
+  console.log('Processed: home.html -> index.html');
+} else {
+  console.warn('⚠️ Warning: src/home.html not found!');
+}
+
+// src/404.html -> dist/404.html (GitHub Pages用エラーページ)
+const src404 = path.join(srcDir, '404.html');
+if (fs.existsSync(src404)) {
+  fs.copyFileSync(src404, path.join(distDir, '404.html'));
+  console.log('Processed: 404.html');
+}
+
+// 4. 独自ドメイン用のCNAMEファイルをdistに生成
 fs.writeFileSync(path.join(distDir, 'CNAME'), 'qgr.jp');
 
-// メインのトップページ（qgr.jp/ にアクセスしたとき用）
-fs.writeFileSync(path.join(distDir, 'index.html'), '<h1>qgr.jp Shortener</h1>');
-
-// 各短縮URLのHTMLを自動生成
+// 5. links.jsonから短縮URL用のHTML群を自動生成
 Object.entries(links).forEach(([slug, url]) => {
   const slugDir = path.join(distDir, slug);
+  
+  // 上書き衝突防止
+  if (fs.existsSync(slugDir)) {
+     console.error(`⚠️ Conflict Warning: "${slug}" already exists! Skipping link.`);
+     return;
+  }
+
   fs.mkdirSync(slugDir, { recursive: true });
 
   const htmlContent = `<!DOCTYPE html>
@@ -32,5 +80,5 @@ Object.entries(links).forEach(([slug, url]) => {
 </html>`;
 
   fs.writeFileSync(path.join(slugDir, 'index.html'), htmlContent);
-  console.log(`Generated: /${slug} -> ${url}`);
+  console.log(`Generated Link: /${slug} -> ${url}`);
 });

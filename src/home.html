@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PicoLink | 公式ディレクトリ</title>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 基本設定 & パステルカラーパレット --- */
+        :root {
+            --bg-color: #f4f7f6;       /* ミントがかったソフトホワイト */
+            --primary: #bac7a7;        /* セージグリーン */
+            --accent: #e8cdad;         /* アプリコットベージュ */
+            --text-main: #697c70;      /* 深みのあるくすみグリーン（読みやすさ重視） */
+            --text-sub: #9caaa0;       /* 淡いくすみグリーン */
+            --card-bg: #ffffff;        /* ピュアホワイト */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- メインコンテナ --- */
+        .container {
+            width: 100%;
+            max-width: 520px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px 32px;
+            box-shadow: 0 10px 30px rgba(186, 199, 167, 0.15);
+            text-align: center;
+        }
+
+        /* --- ヘッダー領域 --- */
+        header {
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: var(--text-sub);
+            font-weight: 500;
+        }
+
+        /* --- 案内テキスト（利用不可の明記） --- */
+        .notice-box {
+            background-color: #f9fbf9;
+            border: 1px dashed var(--primary);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 32px;
+            font-size: 13px;
+            color: var(--text-main);
+        }
+
+        /* --- リンク一覧 --- */
+        .link-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background-color: #fafbfc;
+            border: 1px solid #eef2f0;
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.25s ease;
+        }
+
+        .link-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            background-color: #f7faf8;
+            box-shadow: 0 4px 12px rgba(186, 199, 167, 0.1);
+        }
+
+        .link-info {
+            text-align: left;
+        }
+
+        .link-title {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .link-url {
+            font-size: 12px;
+            color: var(--text-sub);
+            font-family: monospace;
+        }
+
+        .arrow-icon {
+            color: var(--text-sub);
+            font-size: 16px;
+            transition: transform 0.25s ease;
+        }
+
+        .link-item:hover .arrow-icon {
+            transform: translateX(4px);
+            color: var(--text-main);
+        }
+
+        /* --- フッター --- */
+        footer {
+            margin-top: 40px;
+            font-size: 11px;
+            color: var(--text-sub);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo">
+            <span class="logo-icon"></span>
+            <span>PicoLink</span>
+        </div>
+        <p class="tagline">オフィシャル専用スタティック短縮URLナビゲーション</p>
+    </header>
+
+    <div class="notice-box">
+        <p>🔒 本サービスは、運営組織が発行した**公式短縮URLの固定ディレクトリ**です。一般ユーザーによる新規リンク作成や編集はご利用いただけません。</p>
+    </div>
+
+    <main class="link-list">
+        <!-- 必要な固定リンクをここに並べます -->
+        <a href="https://example.com" class="link-item" target="_blank" rel="noopener">
+            <div class="link-info">
+                <p class="link-title">メインサービス公式ページ</p>
+                <p class="link-url">pico.lnk/portal</p>
+            </div>
+            <span class="arrow-icon">→</span>
+        </a>
+
+        <a href="https://example.com" class="link-item" target="_blank" rel="noopener">
+            <div class="link-info">
+                <p class="link-title">公式オンラインマニュアル</p>
+                <p class="link-url">pico.lnk/docs</p>
+            </div>
+            <span class="arrow-icon">→</span>
+        </a>
+
+        <a href="https://example.com" class="link-item" target="_blank" rel="noopener">
+            <div class="link-info">
+                <p class="link-title">お問い合わせ総合窓口</p>
+                <p class="link-url">pico.lnk/help</p>
+            </div>
+            <span class="arrow-icon">→</span>
+        </a>
+    </main>
+
+    <footer>
+        <p>© 2026 PicoLink. Managed by Administrator.</p>
+    </footer>
+</div>
+
+</body>
+</html>

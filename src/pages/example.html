@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <!-- JS無効時のバックアップ（2秒後に強制転送） -->
+    <meta http-equiv="refresh" content="2;url=https://example.com">
+    <style>
+        body {
+            background-color: #f4f7f6; /* パステルミント */
+            color: #697c70;            /* くすみグリーン */
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .box {
+            text-align: center;
+            padding: 20px;
+        }
+        /* 超軽量なCSSスピナー */
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 4px solid #fafbfc;
+            border-top: 4px solid #bac7a7; /* セージ */
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: s 0.8s linear infinite;
+        }
+        @keyframes s { to { transform: rotate(360deg); } }
+        p { font-size: 14px; margin: 4px 0; }
+        a { color: #9caaa0; font-size: 12px; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <div class="spinner"></div>
+    <p>example.com へ移動中...</p>
+    <a href="https://example.com">自動で移動しない場合はこちら</a>
+</div>
+
+<script>
+    // 0.5秒だけ画面を見せて即時リダイレクト（体感速度と安心感の両立）
+    setTimeout(function() {
+        window.location.href = "https://example.com";
+    }, 500);
+</script>
+
+</body>
+</html>
