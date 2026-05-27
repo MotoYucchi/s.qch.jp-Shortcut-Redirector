@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>イラストでわかる！Gitのつかいかた超入門</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome (for Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f0f4f8;
+        }
+        
+        .accent-font {
+            font-family: 'Kiwi Maru', serif;
+        }
+
+        /* アニメーション用 */
+        .box-transition {
+            transition: all 0.5s ease-in-out;
+        }
+
+        .command-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        /* 吹き出しのしっぽ */
+        .balloon-tip::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: #1e293b transparent;
+            display: block;
+            width: 0;
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-20">
+
+    <!-- ヘッダー -->
+    <header class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white py-8 px-4 shadow-lg text-center">
+        <div class="max-w-4xl mx-auto">
+            <span class="bg-yellow-400 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider accent-font">プログラミング初心者大歓迎！</span>
+            <h1 class="text-3xl md:text-5xl font-black mt-3 tracking-tight">🎒 イラストでわかる！Gitのつかいかた超入門</h1>
+            <p class="mt-3 text-sm md:text-base text-indigo-100 max-w-2xl mx-auto">
+                「Gitって難しそう…」をスッキリ解決！<br>
+                荷物をやり取りする流れに例えて、一番よく使う9つのコマンドを直感的にマスターしましょう。
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 mt-8">
+
+        <!-- コンセプト説明：4つのステージ（イラスト風） -->
+        <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm mb-8">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 border-b-4 border-indigo-500 inline-block pb-1">📦 Gitの世界の「4つの場所」とデータの流れ</h2>
+                <p class="text-slate-500 text-sm mt-2">Gitで行う作業は、この4つの場所を行ったり来たりするイメージです！</p>
+            </div>
+
+            <!-- 4つのエリアのグリッド -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 relative mt-8">
+                
+                <!-- ① ワークツリー -->
+                <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-5 text-center flex flex-col justify-between relative shadow-sm">
+                    <span class="absolute -top-3 left-4 bg-blue-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">① ワークツリー</span>
+                    <div class="my-4">
+                        <i class="fa-solid fa-laptop-code text-5xl text-blue-500 mb-2"></i>
+                        <h3 class="font-bold text-lg text-blue-900">自分の部屋 (PC内)</h3>
+                        <p class="text-xs text-slate-600 mt-2">今まさにあなたがエディタを開いて、コードを書いている作業スペースです。</p>
+                    </div>
+                    <div class="bg-blue-100 text-blue-800 text-xs font-bold py-1.5 rounded-lg mt-2">
+                        状態：まだ作業中 📝
+                    </div>
+                </div>
+
+                <!-- ② ステージングエリア -->
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-5 text-center flex flex-col justify-between relative shadow-sm">
+                    <span class="absolute -top-3 left-4 bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">② ステージング</span>
+                    <div class="my-4">
+                        <i class="fa-solid fa-box-archive text-5xl text-emerald-500 mb-2"></i>
+                        <h3 class="font-bold text-lg text-emerald-900">発送用ダンボール</h3>
+                        <p class="text-xs text-slate-600 mt-2">GitHubに送りたい「準備ができたファイル」を一時的に入れておく箱です。</p>
+                    </div>
+                    <div class="bg-emerald-100 text-emerald-800 text-xs font-bold py-1.5 rounded-lg mt-2">
+                        状態：準備中・宛先貼付 📦
+                    </div>
+                </div>
+
+                <!-- ③ ローカルリポジトリ -->
+                <div class="bg-amber-50 border-2 border-amber-200 rounded-xl p-5 text-center flex flex-col justify-between relative shadow-sm">
+                    <span class="absolute -top-3 left-4 bg-amber-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">③ ローカルリポジトリ</span>
+                    <div class="my-4">
+                        <i class="fa-solid fa-warehouse text-5xl text-amber-500 mb-2"></i>
+                        <h3 class="font-bold text-lg text-amber-900">自宅の金庫</h3>
+                        <p class="text-xs text-slate-600 mt-2">あなたのPCの中にある「歴史保管庫」。ガムテープを貼って厳重に記録（セーブ）された状態です。</p>
+                    </div>
+                    <div class="bg-amber-100 text-amber-800 text-xs font-bold py-1.5 rounded-lg mt-2">
+                        状態：手元に保存完了 🔒
+                    </div>
+                </div>
+
+                <!-- ④ リモートリポジトリ -->
+                <div class="bg-rose-50 border-2 border-rose-200 rounded-xl p-5 text-center flex flex-col justify-between relative shadow-sm">
+                    <span class="absolute -top-3 left-4 bg-rose-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">④ リモート (GitHub)</span>
+                    <div class="my-4">
+                        <i class="fa-brands fa-github text-5xl text-rose-600 mb-2"></i>
+                        <h3 class="font-bold text-lg text-rose-900">ネットの巨大倉庫</h3>
+                        <p class="text-xs text-slate-600 mt-2">クラウド（GitHub）上の保管庫。ここに送ることで、世界中の仲間と共有・バックアップができます！</p>
+                    </div>
+                    <div class="bg-rose-100 text-rose-800 text-xs font-bold py-1.5 rounded-lg mt-2">
+                        状態：世界中に共有 🌐
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 同期（PushとPull）のイメージ図 -->
+            <div class="mt-8 bg-slate-50 rounded-xl p-4 border border-slate-100">
+                <h4 class="text-sm font-bold text-slate-700 text-center mb-3">🔄 双方向のやり取りイメージ</h4>
+                <div class="flex flex-col md:flex-row items-center justify-around gap-4 text-center">
+                    <div class="bg-white py-3 px-6 rounded-lg shadow-sm border border-slate-200 flex-1 w-full">
+                        <div class="text-xs font-bold text-rose-500 uppercase"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Push（プッシュ）</div>
+                        <p class="text-[11px] text-slate-500 mt-1">手元のセーブデータ（金庫）を、ネットの倉庫（GitHub）へ<strong>アップロードする</strong></p>
+                    </div>
+                    <div class="text-slate-400 text-2xl hidden md:block">⇆</div>
+                    <div class="bg-white py-3 px-6 rounded-lg shadow-sm border border-slate-200 flex-1 w-full">
+                        <div class="text-xs font-bold text-sky-500 uppercase"><i class="fa-solid fa-cloud-arrow-down mr-1"></i> Pull（プル）</div>
+                        <p class="text-[11px] text-slate-500 mt-1">ネットの倉庫（GitHub）にある最新データを、手元（部屋）へ<strong>ダウンロードする</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- インタラクティブ・シミュレーター -->
+        <section class="bg-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-lg mb-8">
+            <div class="text-center mb-6">
+                <span class="bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">お試しミニゲーム</span>
+                <h2 class="text-2xl font-black mt-2">🎮 Gitコマンド擬似体験シミュレーター</h2>
+                <p class="text-slate-400 text-xs md:text-sm mt-1">下のボタンを左から順番に押して、ファイル（荷物）がどう動くか見てみましょう！</p>
+            </div>
+
+            <!-- ステージ表示 -->
+            <div class="grid grid-cols-4 gap-2 text-center py-4 bg-slate-800 rounded-xl mb-6 border border-slate-700">
+                <div>
+                    <span class="text-[10px] uppercase text-slate-400 block font-bold">① 自分の部屋</span>
+                    <div id="sim-room" class="h-24 flex items-center justify-center border-r border-slate-700 relative">
+                        <div id="sim-file" class="bg-blue-500 text-white px-3 py-1.5 rounded shadow text-xs flex items-center gap-1 font-mono font-bold box-transition">
+                            <i class="fa-solid fa-file-code"></i> code.html
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-[10px] uppercase text-slate-400 block font-bold">② ダンボール</span>
+                    <div id="sim-box" class="h-24 flex items-center justify-center border-r border-slate-700">
+                        <!-- ここに移動する -->
+                    </div>
+                </div>
+                <div>
+                    <span class="text-[10px] uppercase text-slate-400 block font-bold">③ 自宅金庫</span>
+                    <div id="sim-vault" class="h-24 flex items-center justify-center border-r border-slate-700">
+                        <!-- ここに移動する -->
+                    </div>
+                </div>
+                <div>
+                    <span class="text-[10px] uppercase text-slate-400 block font-bold">④ GitHub</span>
+                    <div id="sim-github" class="h-24 flex items-center justify-center">
+                        <!-- ここに移動する -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- コマンド入力シミュレータ -->
+            <div class="bg-slate-950 rounded-xl p-4 border border-slate-800">
+                <div class="flex items-center gap-2 mb-4 text-xs text-slate-400 font-mono border-b border-slate-800 pb-2">
+                    <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                    <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                    <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                    <span class="ml-2">git-terminal - bash</span>
+                </div>
+
+                <div class="font-mono text-sm space-y-2 mb-6 h-20 overflow-y-auto" id="terminal-screen">
+                    <div class="text-slate-500"># コマンドを実行して、歴史を記録しよう！</div>
+                    <div class="text-slate-300">$ <span id="terminal-command" class="text-emerald-400 font-bold">コードを編集しました！ (まだ部屋にあります)</span></div>
+                </div>
+
+                <!-- コマンドボタン群 -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <button onclick="runAdd()" id="btn-add" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 rounded-lg p-3 text-left transition group">
+                        <div class="text-[10px] text-slate-400 font-bold">STEP 1: ダンボールに詰める</div>
+                        <div class="font-mono font-bold text-xs mt-1">git add .</div>
+                    </button>
+                    <button onclick="runCommit()" id="btn-commit" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 rounded-lg p-3 text-left transition opacity-50 cursor-not-allowed" disabled>
+                        <div class="text-[10px] text-slate-400 font-bold">STEP 2: 金庫にセーブする</div>
+                        <div class="font-mono font-bold text-xs mt-1">git commit -m "..."</div>
+                    </button>
+                    <button onclick="runPush()" id="btn-push" class="bg-slate-800 hover:bg-slate-700 text-rose-400 border border-rose-500/30 rounded-lg p-3 text-left transition opacity-50 cursor-not-allowed" disabled>
+                        <div class="text-[10px] text-slate-400 font-bold">STEP 3: GitHubに発送！</div>
+                        <div class="font-mono font-bold text-xs mt-1">git push</div>
+                    </button>
+                    <button onclick="resetSim()" class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 rounded-lg p-3 text-center transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                        <span class="text-xs font-bold">リセット</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- メインコンテンツ：超厳選！よく使う9大コマンド -->
+        <section class="mb-12">
+            <div class="text-center mb-8">
+                <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">これだけ覚えれば実務OK！</span>
+                <h2 class="text-3xl font-black mt-2 text-slate-900">💡 よく使う9つのGitコマンド</h2>
+                <p class="text-slate-600 text-sm mt-2">実際の開発で9割以上使うのは、この9つのコマンドです。やさしく解説します！</p>
+            </div>
+
+            <div class="space-y-6">
+
+                <!-- 1. git clone -->
+                <div class="bg-white rounded-xl shadow-sm border-l-8 border-blue-500 p-6 transition hover:shadow-md">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-blue-100 text-blue-800 font-bold text-sm px-3 py-1 rounded-full">コピー</span>
+                            <h3 class="text-xl font-bold font-mono text-slate-900">1. git clone &lt;リポジトリ名&gt;</h3>
+                        </div>
+                        <button onclick="copyText('git clone https://github.com/example/repo.git')" class="text-slate-400 hover:text-slate-600 transition text-sm flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
+                            <i class="fa-regular fa-copy"></i> コピー
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                        <div class="md:col-span-8">
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                <strong>ネット上のプロジェクトを自分のPCに丸ごとダウンロード</strong>してくるコマンドです。新しくプロジェクトに参加するときに「最初に一度だけ」使います。
+                            </p>
+                            <div class="bg-slate-50 rounded-lg p-3 mt-3 border border-slate-100">
+                                <span class="text-xs text-slate-500 font-bold block mb-1">使用例（GitHubからプロジェクトを持ってくる）:</span>
+                                <code class="text-xs font-mono text-blue-600 block bg-blue-50/50 p-2 rounded border border-blue-100">$ git clone https://github.com/user/my-app.git</code>
+                            </div>
+                        </div>
+                        <div class="md:col-span-4 bg-blue-50 rounded-xl p-4 flex flex-col justify-center">
+                            <div class="text-xs text-blue-900 font-bold flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 例え話でイメージ！
+                            </div>
+                            <p class="text-xs text-blue-800 leading-normal">
+                                GitHubというネットの本棚から、自分の手元に本（プログラム）を1冊買ってきて手元に置くイメージです。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. git pull (NEW) -->
+                <div class="bg-white rounded-xl shadow-sm border-l-8 border-sky-500 p-6 transition hover:shadow-md">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-sky-100 text-sky-800 font-bold text-sm px-3 py-1 rounded-full">同期・取得</span>
+                            <h3 class="text-xl font-bold font-mono text-slate-900">2. git pull origin &lt;ブランチ名&gt;</h3>
+                        </div>
+                        <button onclick="copyText('git pull origin main')" class="text-slate-400 hover:text-slate-600 transition text-sm flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
+                            <i class="fa-regular fa-copy"></i> コピー
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                        <div class="md:col-span-8">
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                <strong>GitHub（リモート倉庫）にある最新のプログラムを自分のPCにダウンロード</strong>して、今の作業スペースに自動合流（マージ）させるコマンドです。チームメンバーが追加したコードを自分の手元に同期する際に毎日使います。
+                            </p>
+                            <div class="bg-slate-50 rounded-lg p-3 mt-3 border border-slate-100">
+                                <span class="text-xs text-slate-500 font-bold block mb-1">使用例（本番用コードの最新状態を取り込む）:</span>
+                                <code class="text-xs font-mono text-sky-600 block bg-sky-50/50 p-2 rounded border border-sky-100">$ git pull origin main</code>
+                            </div>
+                        </div>
+                        <div class="md:col-span-4 bg-sky-50 rounded-xl p-4 flex flex-col justify-center">
+                            <div class="text-xs text-sky-900 font-bold flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 作業を始める前に打つ！
+                            </div>
+                            <p class="text-xs text-sky-800 leading-normal">
+                                朝、PCを開いて仕事を始める前に必ず `git pull` を打つ習慣をつけましょう。古いコードの上から書き進めてしまうトラブル（競合）を未然に防げます。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. git remote add origin -->
+                <div class="bg-white rounded-xl shadow-sm border-l-8 border-violet-500 p-6 transition hover:shadow-md">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-violet-100 text-violet-800 font-bold text-sm px-3 py-1 rounded-full">連携</span>
+                            <h3 class="text-xl font-bold font-mono text-slate-900">3. git remote add origin &lt;URL&gt;</h3>
+                        </div>
+                        <button onclick="copyText('git remote add origin https://github.com/example/repo.git')" class="text-slate-400 hover:text-slate-600 transition text-sm flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
+                            <i class="fa-regular fa-copy"></i> コピー
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                        <div class="md:col-span-8">
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                <strong>「自分のPC」と border 「GitHub上の空っぽの倉庫」をヒモ付ける</strong>コマンドです。イチから自分で作ったアプリを、初めてGitHubに登録するときにだけ使います。
+                            </p>
+                            <div class="bg-slate-50 rounded-lg p-3 mt-3 border border-slate-100">
+                                <span class="text-xs text-slate-500 font-bold block mb-1">使用例:</span>
+                                <code class="text-xs font-mono text-violet-600 block bg-violet-50/50 p-2 rounded border border-violet-100">$ git remote add origin https://github.com/user/new-app.git</code>
+                            </div>
+                        </div>
+                        <div class="md:col-span-4 bg-violet-50 rounded-xl p-4 flex flex-col justify-center">
+                            <div class="text-xs text-violet-900 font-bold flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> ちなみに！
+                            </div>
+                            <p class="text-xs text-violet-800 leading-normal">
+                                「origin(オリジン)」は単なる「あだ名」です。長いGitHubのURLを毎回書くのは大変なので、「origin」というニックネームで登録しています。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. git branch -->
+                <div class="bg-white rounded-xl shadow-sm border-l-8 border-emerald-500 p-6 transition hover:shadow-md">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-emerald-100 text-emerald-800 font-bold text-sm px-3 py-1 rounded-full">分岐</span>
+                            <h3 class="text-xl font-bold font-mono text-slate-900">4. git branch</h3>
+                        </div>
+                        <button onclick="copyText('git branch')" class="text-slate-400 hover:text-slate-600 transition text-sm flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
+                            <i class="fa-regular fa-copy"></i> コピー
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                        <div class="md:col-span-8">
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                <strong>ブランチ（枝分かれした歴史）を確認・新規作成する</strong>コマンドです。共同開発では「本番用ブランチ（mainやmaster）」を汚さないよう、自分の「作業用ブランチ」を作って進めるのが鉄則です！
+                            </p>
+                            <div class="bg-slate-50 rounded-lg p-3 mt-3 border border-slate-100">
+                                <span class="text-xs text-slate-500 font-bold block mb-1">使用例（一覧を表示 & 新規追加）:</span>
+                                <div class="space-y-1">
+                                    <code class="text-xs font-mono text-emerald-600 block bg-emerald-50/50 p-2 rounded border border-emerald-100">$ git branch <span class="text-slate-500"># 一覧を表示。現在地に * が付きます</span></code>
+                                    <code class="text-xs font-mono text-emerald-600 block bg-emerald-50/50 p-2 rounded border border-emerald-100">$ git branch my-feature <span class="text-slate-500"># "my-feature"という作業ブランチを作る</span></code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:col-span-4 bg-emerald-50 rounded-xl p-4 flex flex-col justify-center">
+                            <div class="text-xs text-emerald-900 font-bold flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 例え話でイメージ！
+                            </div>
+                            <p class="text-xs text-emerald-800 leading-normal">
+                                元々の本番用ノートをコピーして、「実験用の下書き用紙」を新しく1枚ちぎって用意するイメージです。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. git status -->
+                <div class="bg-white rounded-xl shadow-sm border-l-8 border-yellow-500 p-6 transition hover:shadow-md">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-yellow-100 text-yellow-800 font-bold text-sm px-3 py-1 rounded-full">状況</span>
+                            <h3 class="text-xl font-bold font-mono text-slate-900">5. git status</h3>
+                        </div>
+                        <button onclick="copyText('git status')" class="text-slate-400 hover:text-slate-600 transition text-sm flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
+                            <i class="fa-regular fa-copy"></i> コピー
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                        <div class="md:col-span-8">
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                <strong>「今、どのファイルを書き換えたっけ？」を確認する</strong>コマンドです。困ったらとりあえず打つコマンドです。書き換えたファイルが赤や緑の文字で分かりやすく表示されます。
+                            </p>
+                            <div class="bg-slate-50 rounded-lg p-3 mt-3 border border-slate-100">
+                                <span class="text-xs text-slate-500 font-bold block mb-1">使用例:</span>
+                                <code class="text-xs font-mono text-amber-600 block bg-amber-50/50 p-2 rounded border border-amber-100">$ git status</code>
+                            </div>
+                        </div>
+                        <div class="md:col-span-4 bg-yellow-50 rounded-xl p-4 flex flex-col justify-center">
+                            <div class="text-xs text-amber-950 font-bold flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> プロの超必須呪文
+                            </div>
+                            <p class="text-xs text-amber-900 leading-normal">
+                                プロのエンジニアも「一回何か書いたら git status」「コミットする前に git status」というように、1日に何十回も打っています。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. git add . -->
+                <div class="bg-white rounded-xl shadow-sm border-l-8 border-teal-500 p-6 transition hover:shadow-md">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-teal-100 text-teal-800 font-bold text-sm px-3 py-1 rounded-full">準備</span>
+                            <h3 class="text-xl font-bold font-mono text-slate-900">6. git add .</h3>
+                        </div>
+                        <button onclick="copyText('git add .')" class="text-slate-400 hover:text-slate-600 transition text-sm flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
+                            <i class="fa-regular fa-copy"></i> コピー
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                        <div class="md:col-span-8">
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                <strong>変更されたすべてのファイルをダンボール（ステージ）に入れる</strong>コマンドです。最後の <strong>「 . （ドット）」</strong> は「今いるフォルダの全ファイル」という意味。特定のファイルだけを指定したい時は `git add index.html` のように指定も可能です。
+                            </p>
+                            <div class="bg-slate-50 rounded-lg p-3 mt-3 border border-slate-100">
+                                <span class="text-xs text-slate-500 font-bold block mb-1">使用例（全ての変更をステージに載せる）:</span>
+                                <code class="text-xs font-mono text-teal-600 block bg-teal-50/50 p-2 rounded border border-teal-100">$ git add .</code>
+                            </div>
+                        </div>
+                        <div class="md:col-span-4 bg-teal-50 rounded-xl p-4 flex flex-col justify-center">
+                            <div class="text-xs text-teal-900 font-bold flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> ドットをお忘れなく！
+                            </div>
+                            <p class="text-xs text-teal-800 leading-normal">
+                                初心者がよく「git add」だけでエンターを押してエラーになります。最後の半角スペース ＋ ドット「 . 」を必ず忘れないようにしましょう。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. git diff --staged -->
+                <div class="bg-white rounded-xl shadow-sm border-l-8 border-orange-500 p-6 transition hover:shadow-md">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-orange-100 text-orange-800 font-bold text-sm px-3 py-1 rounded-full">確認</span>
+                            <h3 class="text-xl font-bold font-mono text-slate-900">7. git diff --staged</h3>
+                        </div>
+                        <button onclick="copyText('git diff --staged')" class="text-slate-400 hover:text-slate-600 transition text-sm flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
+                            <i class="fa-regular fa-copy"></i> コピー
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                        <div class="md:col-span-8">
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                <strong>ダンボール（ステージ）に入っている変更箇所を画面で確認する</strong>コマンドです。自分がこれからコミット（保存）しようとしている変更に、余計なテスト用コードなどが残っていないか確認できます。
+                            </p>
+                            <div class="bg-slate-50 rounded-lg p-3 mt-3 border border-slate-100">
+                                <span class="text-xs text-slate-500 font-bold block mb-1">使用例:</span>
+                                <code class="text-xs font-mono text-orange-600 block bg-orange-50/50 p-2 rounded border border-orange-100">$ git diff --staged</code>
+                            </div>
+                        </div>
+                        <div class="md:col-span-4 bg-orange-50 rounded-xl p-4 flex flex-col justify-center">
+                            <div class="text-xs text-orange-950 font-bold flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 通常の git diff との違い
+                            </div>
+                            <p class="text-xs text-orange-900 leading-normal">
+                                `git diff` は「まだダンボールに入れていない変更」を見せます。`--staged` をつけると「ダンボールに入った中身」を見せます。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. git commit -->
+                <div class="bg-white rounded-xl shadow-sm border-l-8 border-pink-500 p-6 transition hover:shadow-md">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-pink-100 text-pink-800 font-bold text-sm px-3 py-1 rounded-full">記録</span>
+                            <h3 class="text-xl font-bold font-mono text-slate-900">8. git commit -m "&lt;メッセージ&gt;"</h3>
+                        </div>
+                        <button onclick="copyText('git commit -m &quot;修正内容を入力&quot;')" class="text-slate-400 hover:text-slate-600 transition text-sm flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
+                            <i class="fa-regular fa-copy"></i> コピー
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                        <div class="md:col-span-8">
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                ダンボールのフタをして、<strong>「〇〇を修正したよ」と一言メッセージ（伝票）をつけて歴史に記録する（セーブする）</strong>コマンドです。
+                            </p>
+                            <div class="bg-slate-50 rounded-lg p-3 mt-3 border border-slate-100">
+                                <span class="text-xs text-slate-500 font-bold block mb-1">使用例:</span>
+                                <code class="text-xs font-mono text-pink-600 block bg-pink-50/50 p-2 rounded border border-pink-100">$ git commit -m "ログインボタンのデザイン崩れを修正"</code>
+                            </div>
+                        </div>
+                        <div class="md:col-span-4 bg-pink-50 rounded-xl p-4 flex flex-col justify-center">
+                            <div class="text-xs text-pink-900 font-bold flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-triangle-exclamation"></i> 初心者キラーの罠
+                            </div>
+                            <p class="text-xs text-pink-800 leading-normal">
+                                末尾 of `-m "メッセージ"` を書き忘れると、黒いエディタ画面(Vim)が立ち上がり戻れなくなります。焦らず <kbd class="bg-slate-200 px-1 rounded text-slate-800 font-bold">:q!</kbd> と打ち込みエンターで脱出できます。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. git push -->
+                <div class="bg-white rounded-xl shadow-sm border-l-8 border-rose-500 p-6 transition hover:shadow-md">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-rose-100 text-rose-800 font-bold text-sm px-3 py-1 rounded-full">アップロード</span>
+                            <h3 class="text-xl font-bold font-mono text-slate-900">9. git push origin &lt;ブランチ名&gt;</h3>
+                        </div>
+                        <button onclick="copyText('git push origin main')" class="text-slate-400 hover:text-slate-600 transition text-sm flex items-center gap-1 bg-slate-100 px-2 py-1 rounded">
+                            <i class="fa-regular fa-copy"></i> コピー
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+                        <div class="md:col-span-8">
+                            <p class="text-sm text-slate-700 leading-relaxed">
+                                PC内にコミット（保存）されたあなたの履歴データを、<strong>GitHub（ネットの巨大倉庫）にアップロードして送信する</strong>コマンドです。
+                            </p>
+                            <div class="bg-slate-50 rounded-lg p-3 mt-3 border border-slate-100">
+                                <span class="text-xs text-slate-500 font-bold block mb-1">使用例（自分の作業ブランチをGitHubへ送る）:</span>
+                                <code class="text-xs font-mono text-rose-600 block bg-rose-50/50 p-2 rounded border border-rose-100">$ git push origin my-feature</code>
+                            </div>
+                        </div>
+                        <div class="md:col-span-4 bg-rose-50 rounded-xl p-4 flex flex-col justify-center">
+                            <div class="text-xs text-rose-900 font-bold flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 例え話でイメージ！
+                            </div>
+                            <p class="text-xs text-rose-800 leading-normal">
+                                自宅で綺麗にパッケージした商品を、運送トラックに載せて本社のネット物流倉庫（GitHub）へ一斉に届ける最終段階です！
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ルーティン紹介 -->
+        <section class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-xl">
+            <h2 class="text-2xl font-bold text-center border-b border-indigo-500 pb-3 mb-6">🏃‍♂️ 朝から夜まで！毎日の仕事の流れシミュレーション</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+                
+                <!-- 朝 -->
+                <div class="bg-slate-800/50 rounded-xl p-5 border border-indigo-500/20">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-sky-500 text-white p-2 rounded-lg text-lg"><i class="fa-solid fa-sun animate-spin-slow"></i></span>
+                        <h3 class="font-bold text-lg text-sky-400">1. 朝：出勤して準備</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        まずは最新のプロジェクト状態をダウンロード（pull）、または新しい実験用用紙（ブランチ）を作ります。
+                    </p>
+                    <div class="bg-slate-900/80 rounded-lg p-3 mt-3 font-mono text-[11px] text-sky-300 space-y-1">
+                        <div>$ git checkout main</div>
+                        <div>$ git pull <span class="text-slate-500"># 最新をダウンロード</span></div>
+                        <div>$ git checkout -b feat-login <span class="text-slate-500"># 新機能ブランチ作成</span></div>
+                    </div>
+                </div>
+
+                <!-- 昼 -->
+                <div class="bg-slate-800/50 rounded-xl p-5 border border-indigo-500/20">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-emerald-500 text-white p-2 rounded-lg text-lg"><i class="fa-solid fa-laptop"></i></span>
+                        <h3 class="font-bold text-lg text-emerald-400">2. 昼：作業＆セーブ</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        一生懸命コードを書きます。キリが良くなったら、こまめに「ダンボールに詰めて、セーブ」をします。
+                    </p>
+                    <div class="bg-slate-900/80 rounded-lg p-3 mt-3 font-mono text-[11px] text-emerald-300 space-y-1">
+                        <div># 〜〜 画面作成・バグ修正 〜〜</div>
+                        <div>$ git status <span class="text-slate-500"># 状況確認</span></div>
+                        <div>$ git add . <span class="text-slate-500"># 箱詰め</span></div>
+                        <div>$ git commit -m "ログイン画面作成"</div>
+                    </div>
+                </div>
+
+                <!-- 夕方 -->
+                <div class="bg-slate-800/50 rounded-xl p-5 border border-indigo-500/20">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-rose-500 text-white p-2 rounded-lg text-lg"><i class="fa-solid fa-moon"></i></span>
+                        <h3 class="font-bold text-lg text-rose-400">3. 夜：GitHubに発送して帰宅</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        今日の成果をすべてGitHub上にアップロード！明日会社PCが壊れても、GitHubにあるので安心です。
+                    </p>
+                    <div class="bg-slate-900/80 rounded-lg p-3 mt-3 font-mono text-[11px] text-rose-300 space-y-1">
+                        <div>$ git status <span class="text-slate-500"># 最終確認</span></div>
+                        <div>$ git push origin feat-login <span class="text-slate-500"># 発送！</span></div>
+                        <div class="text-slate-400"># おつかれさまでした！🎉</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- コピートースト通知 -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span>コピーしました！</span>
+    </div>
+
+    <!-- JavaScript 処理 -->
+    <script>
+        // コピー処理
+        function copyText(text) {
+            // navigator.clipboard が制限される環境での代替
+            const tempInput = document.createElement("input");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            // トースト表示
+            const toast = document.getElementById("toast");
+            toast.classList.remove("translate-y-20", "opacity-0");
+            setTimeout(() => {
+                toast.classList.add("translate-y-20", "opacity-0");
+            }, 2000);
+        }
+
+        // シミュレーター用状態管理
+        let currentStep = 0; // 0: room, 1: box (add), 2: vault (commit), 3: github (push)
+        const simFile = document.getElementById("sim-file");
+        const simRoom = document.getElementById("sim-room");
+        const simBox = document.getElementById("sim-box");
+        const simVault = document.getElementById("sim-vault");
+        const simGithub = document.getElementById("sim-github");
+        
+        const btnAdd = document.getElementById("btn-add");
+        const btnCommit = document.getElementById("btn-commit");
+        const btnPush = document.getElementById("btn-push");
+        const termScreen = document.getElementById("terminal-screen");
+
+        function logTerminal(cmd, desc) {
+            termScreen.innerHTML += `
+                <div class="text-slate-500 mt-2">$ ${cmd}</div>
+                <div class="text-emerald-400 font-bold">&gt;&gt; ${desc}</div>
+            `;
+            termScreen.scrollTop = termScreen.scrollHeight;
+        }
+
+        // STEP 1: Add
+        function runAdd() {
+            if (currentStep !== 0) return;
+            
+            // ファイルをダンボール箱に移動
+            simBox.appendChild(simFile);
+            simFile.className = "bg-emerald-500 text-white px-3 py-1.5 rounded shadow text-xs flex items-center gap-1 font-mono font-bold box-transition";
+            simFile.innerHTML = `<i class="fa-solid fa-box-open"></i> 箱詰めされた code.html`;
+
+            logTerminal("git add .", "部屋にある変更ファイルをダンボールに詰めました！");
+
+            // ボタンの状態制御
+            btnAdd.classList.add("opacity-50", "cursor-not-allowed");
+            btnAdd.disabled = true;
+
+            btnCommit.classList.remove("opacity-50", "cursor-not-allowed");
+            btnCommit.disabled = false;
+            btnCommit.classList.add("command-pulse");
+
+            currentStep = 1;
+        }
+
+        // STEP 2: Commit
+        function runCommit() {
+            if (currentStep !== 1) return;
+
+            // ファイルを金庫に移動
+            simVault.appendChild(simFile);
+            simFile.className = "bg-amber-500 text-white px-3 py-1.5 rounded shadow text-xs flex items-center gap-1 font-mono font-bold box-transition";
+            simFile.innerHTML = `<i class="fa-solid fa-lock"></i> 記録（セーブ）された code.html`;
+
+            logTerminal('git commit -m "新しいプログラムを追加"', "ダンボールをガムテープで留めて、手元にカチッとセーブしました！");
+
+            // ボタンの状態制御
+            btnCommit.classList.remove("command-pulse");
+            btnCommit.classList.add("opacity-50", "cursor-not-allowed");
+            btnCommit.disabled = true;
+
+            btnPush.classList.remove("opacity-50", "cursor-not-allowed");
+            btnPush.disabled = false;
+            btnPush.classList.add("command-pulse");
+
+            currentStep = 2;
+        }
+
+        // STEP 3: Push
+        function runPush() {
+            if (currentStep !== 2) return;
+
+            // ファイルをGitHubに移動
+            simGithub.appendChild(simFile);
+            simFile.className = "bg-rose-500 text-white px-3 py-1.5 rounded shadow text-xs flex items-center gap-1 font-mono font-bold box-transition";
+            simFile.innerHTML = `<i class="fa-brands fa-github"></i> 送信完了！ code.html`;
+
+            logTerminal('git push origin main', "GitHub（ネットの倉庫）に送信完了！これで世界中からアクセスできます。");
+
+            // ボタンの状態制御
+            btnPush.classList.remove("command-pulse");
+            btnPush.classList.add("opacity-50", "cursor-not-allowed");
+            btnPush.disabled = true;
+
+            currentStep = 3;
+        }
+
+        // リセット
+        function resetSim() {
+            simRoom.appendChild(simFile);
+            simFile.className = "bg-blue-500 text-white px-3 py-1.5 rounded shadow text-xs flex items-center gap-1 font-mono font-bold box-transition";
+            simFile.innerHTML = `<i class="fa-solid fa-file-code"></i> code.html`;
+
+            termScreen.innerHTML = `
+                <div class="text-slate-500"># リセットしました</div>
+                <div class="text-slate-300">$ <span class="text-emerald-400 font-bold">コードを新しく作成しました！</span></div>
+            `;
+
+            // ボタン初期化
+            btnAdd.classList.remove("opacity-50", "cursor-not-allowed");
+            btnAdd.disabled = false;
+
+            btnCommit.classList.remove("command-pulse");
+            btnCommit.classList.add("opacity-50", "cursor-not-allowed");
+            btnCommit.disabled = true;
+
+            btnPush.classList.remove("command-pulse");
+            btnPush.classList.add("opacity-50", "cursor-not-allowed");
+            btnPush.disabled = true;
+
+            currentStep = 0;
+        }
+    </script>
+</body>
+</html>
