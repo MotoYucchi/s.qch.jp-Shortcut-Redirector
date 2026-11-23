@@ -9,7 +9,7 @@
         "url": "https://motoyucchi.work",
         "title": "MotoYucchi",
         "description": "MotoYucchi 公式サイト",
-        "public": true
+        "public": false
     },
     "yy": {
         "url": "https://www.yamamoto-yuta.com",
@@ -23,7 +23,7 @@
         "description": "Tello ドローン Web コントローラー",
         "public": true
     },
-    "github": {
+    "git": {
         "url": "https://github.com/motoyucchi",
         "title": "GitHub",
         "description": "MotoYucchi GitHub プロフィール",
