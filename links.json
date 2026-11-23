@@ -52,5 +52,11 @@
         "title": "SITCRC 2026 シフトフォーム",
         "description": "",
         "public": false
+    },
+    "tno51d": {
+        "url": "https://s.qch.jp/pages/git%E3%81%AE%E3%81%A4%E3%81%8B%E3%81%84%E3%81%8B%E3%81%9F%EF%BC%81",
+        "title": "Gitの使い方！",
+        "description": "イラストでわかる！Gitのつかいかた超入門",
+        "public": true
     }
 }
