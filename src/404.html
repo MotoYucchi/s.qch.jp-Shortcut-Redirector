@@ -3,35 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Not Found | s.qch.jp</title>
+    <title>404 Not Found - s.qch.jp</title>
     <style>
-        :root {
-            color-scheme: light dark;
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --text-sub: #64748b;
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
-            --accent-soft: rgba(37, 99, 235, 0.1);
-            --shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0b1120;
-                --surface: #111827;
-                --border: #1e293b;
-                --text: #f8fafc;
-                --text-sub: #94a3b8;
-                --accent: #3b82f6;
-                --accent-hover: #2563eb;
-                --accent-soft: rgba(59, 130, 246, 0.15);
-                --shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-            }
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -39,101 +12,133 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background-color: #f3efe4;
+            background-image:
+                linear-gradient(to right, rgba(168, 159, 140, 0.14) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(168, 159, 140, 0.14) 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: #2c2822;
+            font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "MS PGothic", sans-serif;
+            font-size: 14px;
+            line-height: 1.7;
             min-height: 100vh;
-            padding: 24px;
-            display: grid;
-            place-items: center;
+            padding: 24px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .card {
+        .frame {
             width: 100%;
-            max-width: 460px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 22px;
-            padding: 40px 28px 32px;
+            max-width: 500px;
+            background-color: #fdfbf6;
+            border: 3px double #9e9582;
+            box-shadow: 4px 4px 0 #d8d0be;
+        }
+
+        .titlebar {
+            background-color: #6b5649;
+            color: #fbfaf5;
+            padding: 10px 16px;
+            border-bottom: 2px solid #4c3c33;
+            font-weight: bold;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .body {
+            padding: 24px 22px 20px;
             text-align: center;
-            box-shadow: var(--shadow);
         }
 
         .code {
-            display: inline-block;
-            font-size: 42px;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            background: linear-gradient(135deg, #2563eb, #0ea5e9);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+            font-family: "Georgia", "Times New Roman", serif;
+            font-size: 36px;
+            font-weight: bold;
+            color: #6b5649;
+            margin-bottom: 6px;
         }
 
         h1 {
-            font-size: 19px;
-            font-weight: 700;
+            font-size: 17px;
             margin-bottom: 10px;
+            color: #2c2822;
         }
 
         .desc {
             font-size: 13.5px;
-            color: var(--text-sub);
-            line-height: 1.7;
-            margin-bottom: 18px;
+            color: #554e42;
+            margin-bottom: 16px;
         }
 
         .path-box {
             display: inline-block;
             max-width: 100%;
             padding: 6px 12px;
-            margin-bottom: 24px;
-            border-radius: 10px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: 12.5px;
-            color: var(--text);
+            margin-bottom: 20px;
+            background-color: #f6f2e8;
+            border: 1px dashed #bfb59e;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 13px;
+            color: #3b352b;
             word-break: break-all;
         }
 
-        .btn {
+        .retro-btn {
             display: inline-block;
-            padding: 12px 24px;
-            border-radius: 12px;
-            background: var(--accent);
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: background-color 0.2s ease, transform 0.2s ease;
+            padding: 6px 18px;
+            background-color: #eae4d4;
+            color: #1c4c7c;
+            border: 2px solid;
+            border-color: #ffffff #9c927d #9c927d #ffffff;
+            text-decoration: underline;
+            font-size: 13.5px;
+            font-weight: bold;
         }
 
-        .btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
+        .retro-btn:hover {
+            background-color: #e1d9c5;
+        }
+
+        .retro-btn:active {
+            border-color: #9c927d #ffffff #ffffff #9c927d;
+        }
+
+        hr.groove {
+            border: none;
+            border-top: 1px solid #c4baa4;
+            border-bottom: 1px solid #ffffff;
+            margin: 20px 0 10px;
         }
 
         footer {
-            margin-top: 28px;
-            font-size: 11.5px;
-            color: var(--text-sub);
+            font-size: 12px;
+            color: #635b4e;
         }
     </style>
 </head>
 <body>
-    <main class="card">
-        <div class="code">404</div>
-        <h1>ショートカットが見つかりません</h1>
-        <p class="desc">
-            指定された短縮URLは登録されていないか、削除された可能性があります。<br>
-            URLのスペルをご確認ください。
-        </p>
-        <div id="requestedPath" class="path-box">s.qch.jp</div>
-        <div>
-            <a href="/" class="btn">s.qch.jp トップへ戻る</a>
+    <main class="frame">
+        <div class="titlebar">
+            <span>404 Not Found</span>
+            <span style="font-size:12px; font-weight:normal;">s.qch.jp</span>
         </div>
-        <footer>© <!-- BUILD_YEAR --> s.qch.jp · Managed by MotoYucchi</footer>
+        <div class="body">
+            <div class="code">404</div>
+            <h1>お探しの短縮URLは見つかりませんでした</h1>
+            <p class="desc">
+                指定されたページは削除されたか、URLの入力に誤りがある可能性があります。<br>
+                お手数ですが、トップページのリンク集からご確認ください。
+            </p>
+            <div id="requestedPath" class="path-box">s.qch.jp</div>
+            <div>
+                <a href="/" class="retro-btn">s.qch.jp トップページへ戻る</a>
+            </div>
+            <hr class="groove">
+            <footer>Copyright (C) <!-- BUILD_YEAR --> s.qch.jp · Managed by MotoYucchi</footer>
+        </div>
     </main>
 
     <script>

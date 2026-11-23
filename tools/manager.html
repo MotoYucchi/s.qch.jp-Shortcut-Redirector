@@ -3,122 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>__SITE_DOMAIN__ Manager | MotoYucchi Local Admin</title>
+    <title>__SITE_DOMAIN__ 管理ツール (MotoYucchi Local Admin)</title>
     <style>
-        :root {
-            color-scheme: light dark;
-            --bg: #f1f5f9;
-            --surface: #ffffff;
-            --surface-2: #f8fafc;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --text-sub: #64748b;
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
-            --accent-soft: rgba(37, 99, 235, 0.1);
-            --green: #16a34a;
-            --green-soft: rgba(22, 163, 74, 0.12);
-            --amber: #d97706;
-            --amber-soft: rgba(217, 119, 6, 0.14);
-            --red: #dc2626;
-            --red-soft: rgba(220, 38, 38, 0.12);
-            --shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0b1120;
-                --surface: #111827;
-                --surface-2: #0f172a;
-                --border: #1e293b;
-                --text: #f8fafc;
-                --text-sub: #94a3b8;
-                --accent: #3b82f6;
-                --accent-hover: #2563eb;
-                --accent-soft: rgba(59, 130, 246, 0.16);
-                --green: #22c55e;
-                --green-soft: rgba(34, 197, 94, 0.16);
-                --amber: #f59e0b;
-                --amber-soft: rgba(245, 158, 11, 0.18);
-                --red: #ef4444;
-                --red-soft: rgba(239, 68, 68, 0.16);
-                --shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-            }
-        }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
+            background-color: #f2eee2;
+            background-image:
+                linear-gradient(to right, rgba(168, 159, 140, 0.13) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(168, 159, 140, 0.13) 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: #2c2822;
+            font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "MS PGothic", sans-serif;
+            font-size: 13.5px;
+            line-height: 1.6;
             min-height: 100vh;
-            padding-bottom: 48px;
+            padding-bottom: 40px;
         }
 
+        /* クラシックな上部ウィンドウバー */
         .topbar {
             position: sticky;
             top: 0;
             z-index: 20;
-            background: color-mix(in srgb, var(--surface) 88%, transparent);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
+            background-color: #465d73;
+            color: #fbfaf5;
+            border-bottom: 3px double #2b3c4d;
         }
 
         .topbar-inner {
-            max-width: 1120px;
+            max-width: 1080px;
             margin: 0 auto;
-            padding: 14px 20px;
+            padding: 10px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .brand-mark {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #2563eb, #0ea5e9);
-            color: #fff;
-            display: grid;
-            place-items: center;
-            font-weight: 800;
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        .brand-title {
+            font-size: 18px;
+            font-weight: bold;
+            font-family: "Georgia", "Times New Roman", serif;
+            letter-spacing: 0.03em;
         }
 
-        .brand h1 {
-            font-size: 17px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 3px 9px;
-            border-radius: 999px;
+        .admin-tag {
             font-size: 11.5px;
-            font-weight: 600;
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            padding: 1px 8px;
+            background-color: #35495c;
+            border: 1px solid #7f97ae;
+            color: #eef3f7;
+            font-family: "Consolas", "Courier New", monospace;
         }
-
-        .badge-blue { background: var(--accent-soft); color: var(--accent); }
-        .badge-green { background: var(--green-soft); color: var(--green); }
-        .badge-amber { background: var(--amber-soft); color: var(--amber); }
-        .badge-red { background: var(--red-soft); color: var(--red); }
-        .badge-gray { background: var(--surface-2); color: var(--text-sub); border: 1px solid var(--border); }
 
         .topbar-actions {
             display: flex;
@@ -127,64 +72,99 @@
             flex-wrap: wrap;
         }
 
+        .status-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            font-family: "Consolas", "Courier New", monospace;
+            border: 1px solid #9c927d;
+            background-color: #f7f3e8;
+            color: #3b352b;
+        }
+
+        .pill-ok { background-color: #e4efe0; border-color: #6b9167; color: #264d24; }
+        .pill-warn { background-color: #f8eed7; border-color: #b89146; color: #6e4f12; }
+        .pill-info { background-color: #e4edf5; border-color: #6787a6; color: #234668; }
+
+        .top-link {
+            color: #fbfaf5;
+            font-size: 12.5px;
+            text-decoration: underline;
+            padding: 3px 8px;
+            background-color: #384d61;
+            border: 1px solid #758da3;
+        }
+
+        .top-link:hover {
+            background-color: #2f4152;
+        }
+
         .main {
-            max-width: 1120px;
-            margin: 22px auto 0;
-            padding: 0 20px;
+            max-width: 1080px;
+            margin: 18px auto 0;
+            padding: 0 16px;
             display: grid;
-            gap: 20px;
+            gap: 18px;
         }
 
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
+        /* クラシックパネル枠 */
+        .panel {
+            background-color: #fdfbf6;
+            border: 2px solid #9e9582;
+            box-shadow: 3px 3px 0 #d8d0be;
         }
 
-        .card-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
+        .panel-header {
+            background-color: #e9e2d0;
+            border-bottom: 2px solid #b5ab94;
+            padding: 9px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
-        .card-title {
-            font-size: 15px;
-            font-weight: 700;
+        .panel-title {
+            font-size: 14.5px;
+            font-weight: bold;
+            color: #2c2822;
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .card-body {
-            padding: 18px 20px;
+        .panel-body {
+            padding: 14px 16px 16px;
         }
 
+        /* クラシック立体風ボタン */
         button, .btn-link {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 8px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text);
+            gap: 5px;
+            padding: 5px 12px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: bold;
+            font-family: inherit;
+            color: #2c2822;
+            background-color: #eae4d4;
+            border: 2px solid;
+            border-color: #ffffff #968c77 #968c77 #ffffff;
             cursor: pointer;
             text-decoration: none;
-            transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+            line-height: 1.4;
         }
 
         button:hover:not(:disabled), .btn-link:hover {
-            background: var(--surface-2);
-            border-color: var(--accent);
+            background-color: #e0d8c4;
+        }
+
+        button:active:not(:disabled) {
+            border-color: #968c77 #ffffff #ffffff #968c77;
         }
 
         button:disabled {
@@ -193,113 +173,126 @@
         }
 
         .btn-primary {
-            background: var(--accent);
-            border-color: var(--accent);
+            background-color: #465d73;
             color: #ffffff;
+            border-color: #7792ac #2a3b4b #2a3b4b #7792ac;
         }
 
         .btn-primary:hover:not(:disabled) {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
+            background-color: #3a4f63;
         }
 
-        .btn-success {
-            background: var(--green);
-            border-color: var(--green);
+        .btn-sync {
+            background-color: #3d6b47;
             color: #ffffff;
+            border-color: #6ea079 #24452b #24452b #6ea079;
         }
 
-        .btn-success:hover:not(:disabled) {
-            filter: brightness(0.92);
-            border-color: var(--green);
+        .btn-sync:hover:not(:disabled) {
+            background-color: #31593a;
         }
 
         .btn-danger {
-            color: var(--red);
-            border-color: color-mix(in srgb, var(--red) 35%, var(--border));
+            background-color: #f4e3e0;
+            color: #8c2f24;
+            border-color: #ffffff #b57c74 #b57c74 #ffffff;
         }
 
         .btn-danger:hover:not(:disabled) {
-            background: var(--red-soft);
-            border-color: var(--red);
+            background-color: #ebd2ce;
         }
 
         .btn-sm {
-            padding: 5px 10px;
+            padding: 3px 9px;
             font-size: 12px;
-            border-radius: 8px;
+        }
+
+        /* 入力フィールド（クラシックな凹み枠） */
+        .input {
+            flex: 1;
+            min-width: 200px;
+            padding: 6px 9px;
+            font-size: 13.5px;
+            font-family: inherit;
+            color: #2c2822;
+            background-color: #ffffff;
+            border: 2px solid;
+            border-color: #9c927d #ffffff #ffffff #9c927d;
+        }
+
+        .input:focus {
+            outline: 2px solid #465d73;
+            outline-offset: 1px;
         }
 
         .git-controls {
             display: grid;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .git-row {
+        .row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
-        .input {
-            flex: 1;
-            min-width: 220px;
-            padding: 9px 12px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--surface-2);
-            color: var(--text);
-            font-size: 13.5px;
-            outline: none;
+        .checkbox-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            color: #4a4338;
+            cursor: pointer;
         }
 
-        .input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-soft);
-        }
-
+        /* クラシック見出しタブ */
         .tabs {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             margin-top: 14px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
+            border-bottom: 2px solid #b5ab94;
         }
 
         .tab-btn {
-            border: none;
-            background: transparent;
-            color: var(--text-sub);
-            padding: 6px 12px;
-            border-radius: 8px;
+            border: 1px solid #b5ab94;
+            border-bottom: none;
+            background-color: #ebe5d6;
+            color: #554e42;
+            padding: 5px 12px;
             font-size: 12.5px;
+            margin-bottom: -2px;
         }
 
         .tab-btn.active {
-            background: var(--accent-soft);
-            color: var(--accent);
+            background-color: #f6f2e7;
+            color: #2c2822;
+            border-top: 2px solid #465d73;
+            border-bottom: 2px solid #f6f2e7;
         }
 
         .console {
-            margin-top: 10px;
-            background: #0b1120;
-            color: #e2e8f0;
-            border-radius: 10px;
-            padding: 12px 14px;
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            background-color: #f6f2e7;
+            color: #2c2822;
+            border: 1px solid #b5ab94;
+            border-top: none;
+            padding: 10px 12px;
+            font-family: "Consolas", "Courier New", monospace;
             font-size: 12px;
-            max-height: 220px;
+            max-height: 210px;
             overflow: auto;
             white-space: pre-wrap;
             word-break: break-word;
         }
 
         .commit-list {
-            margin-top: 10px;
+            background-color: #f6f2e7;
+            border: 1px solid #b5ab94;
+            border-top: none;
+            padding: 8px;
             display: grid;
             gap: 6px;
-            max-height: 220px;
+            max-height: 210px;
             overflow: auto;
         }
 
@@ -308,176 +301,191 @@
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            padding: 8px 10px;
-            border-radius: 8px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
+            padding: 6px 8px;
+            background-color: #fdfbf6;
+            border: 1px dotted #bfb59e;
             font-size: 12.5px;
         }
 
         .commit-hash {
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            color: var(--accent);
-            font-weight: 600;
-            margin-right: 8px;
+            font-family: "Consolas", "Courier New", monospace;
+            color: #1c4c7c;
+            font-weight: bold;
+            margin-right: 6px;
         }
 
         .commit-meta {
-            color: var(--text-sub);
+            color: #635b4e;
             font-size: 11.5px;
-            flex-shrink: 0;
+            white-space: nowrap;
         }
 
+        /* 検索＆フィルタバー */
         .toolbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+            padding: 9px 10px;
+            background-color: #f2ede0;
+            border: 1px solid #cbc2ae;
         }
 
         .filter-group {
             display: flex;
-            gap: 6px;
+            gap: 5px;
         }
 
         .table-wrap {
             overflow-x: auto;
+            border: 1px solid #b8ae98;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13.5px;
+            font-size: 13px;
+            background-color: #fdfbf6;
         }
 
         th, td {
             text-align: left;
-            padding: 11px 10px;
-            border-bottom: 1px solid var(--border);
+            padding: 9px 10px;
+            border-bottom: 1px dotted #cbc2ae;
             vertical-align: middle;
         }
 
         th {
-            font-size: 11.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: var(--text-sub);
-            font-weight: 700;
+            background-color: #ece6d7;
+            border-bottom: 2px solid #b8ae98;
+            font-size: 12px;
+            color: #3f382e;
+            white-space: nowrap;
         }
 
-        tr:last-child td { border-bottom: none; }
+        tbody tr:nth-child(even) {
+            background-color: #f8f5ec;
+        }
+
+        tbody tr:hover {
+            background-color: #f1ead8;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
 
         .slug-cell {
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-weight: 700;
-            color: var(--accent);
+            font-family: "Consolas", "Courier New", monospace;
+            font-weight: bold;
+            color: #1c4c7c;
             white-space: nowrap;
         }
 
         .url-cell {
-            max-width: 340px;
+            max-width: 320px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
         .url-cell a {
-            color: var(--text-sub);
-            text-decoration: none;
+            color: #1c4c7c;
+            text-decoration: underline;
         }
 
-        .url-cell a:hover {
-            color: var(--accent);
-            text-decoration: underline;
+        .url-cell a:visited {
+            color: #553b6e;
         }
 
         .subtext {
             font-size: 11.5px;
-            color: var(--text-sub);
+            color: #635b4e;
         }
 
         .actions-cell {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             justify-content: flex-end;
             white-space: nowrap;
         }
 
-        .toggle-btn {
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 11.5px;
-            font-weight: 700;
+        .toggle-pub {
+            background-color: #e4efe0;
+            color: #264d24;
+            border-color: #ffffff #789a74 #789a74 #ffffff;
         }
 
-        /* Modal */
+        .toggle-priv {
+            background-color: #ece7da;
+            color: #5d5548;
+        }
+
+        /* クラシックダイアログ（モーダル） */
         .modal-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.55);
-            backdrop-filter: blur(4px);
+            background-color: rgba(44, 40, 34, 0.45);
             display: none;
-            place-items: center;
-            padding: 18px;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
             z-index: 50;
         }
 
-        .modal-backdrop.open { display: grid; }
+        .modal-backdrop.open { display: flex; }
 
         .modal {
             width: 100%;
             max-width: 500px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
-            overflow: hidden;
+            background-color: #fdfbf6;
+            border: 3px double #7d7463;
+            box-shadow: 5px 5px 0 rgba(44, 40, 34, 0.35);
         }
 
         .modal-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
+            background-color: #465d73;
+            color: #ffffff;
+            padding: 9px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 2px solid #2b3c4d;
         }
 
         .modal-body {
-            padding: 18px 20px;
+            padding: 16px 18px;
             display: grid;
-            gap: 14px;
+            gap: 12px;
         }
 
         .field {
             display: grid;
-            gap: 6px;
+            gap: 4px;
         }
 
         .field label {
             font-size: 12.5px;
-            font-weight: 600;
+            font-weight: bold;
+            color: #3b352b;
         }
 
         .preview-url {
             font-size: 12px;
-            color: var(--accent);
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        }
-
-        .checkbox-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            cursor: pointer;
+            color: #1c4c7c;
+            font-family: "Consolas", "Courier New", monospace;
+            background-color: #f3efe4;
+            border: 1px dashed #bfb59e;
+            padding: 3px 7px;
         }
 
         .modal-footer {
-            padding: 14px 20px;
-            border-top: 1px solid var(--border);
+            padding: 10px 18px;
+            background-color: #efeae0;
+            border-top: 1px solid #c4baa4;
             display: flex;
             justify-content: flex-end;
             gap: 8px;
@@ -485,90 +493,82 @@
 
         .toast {
             position: fixed;
-            right: 20px;
-            bottom: 20px;
-            background: #0f172a;
-            color: #ffffff;
-            padding: 10px 16px;
-            border-radius: 12px;
+            right: 18px;
+            bottom: 18px;
+            background-color: #fdfbf6;
+            color: #2c2822;
+            border: 2px solid #465d73;
+            box-shadow: 3px 3px 0 rgba(44, 40, 34, 0.25);
+            padding: 8px 14px;
             font-size: 13px;
-            font-weight: 600;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            transform: translateY(12px);
-            pointer-events: none;
-            transition: opacity 0.2s ease, transform 0.2s ease;
+            font-weight: bold;
+            display: none;
             z-index: 100;
         }
 
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
+        .toast.show { display: block; }
+        .toast.error {
+            background-color: #f9ebe8;
+            border-color: #8c2f24;
+            color: #8c2f24;
         }
-
-        .toast.error { background: var(--red); }
     </style>
 </head>
 <body>
     <header class="topbar">
         <div class="topbar-inner">
             <div class="brand">
-                <div class="brand-mark">s/</div>
-                <div>
-                    <h1>
-                        __SITE_DOMAIN__ Manager
-                        <span class="badge badge-blue">MotoYucchi Admin</span>
-                    </h1>
-                </div>
+                <span class="brand-title">__SITE_DOMAIN__ 管理ツール</span>
+                <span class="admin-tag">MotoYucchi Local Admin</span>
             </div>
             <div class="topbar-actions">
-                <span id="branchBadge" class="badge badge-gray">branch: ...</span>
-                <span id="syncBadge" class="badge badge-gray">確認中...</span>
-                <a class="btn-link btn-sm" href="https://__SITE_DOMAIN__" target="_blank" rel="noopener">s.qch.jp を開く ↗</a>
-                <a id="actionsLink" class="btn-link btn-sm" href="https://github.com/MotoYucchi/s.qch.jp-Shortcut-Redirector/actions" target="_blank" rel="noopener">GitHub Actions ↗</a>
+                <span id="branchBadge" class="status-pill">branch: ...</span>
+                <span id="syncBadge" class="status-pill">確認中...</span>
+                <a class="top-link" href="https://__SITE_DOMAIN__" target="_blank" rel="noopener">s.qch.jp を開く ↗</a>
+                <a id="actionsLink" class="top-link" href="https://github.com/MotoYucchi/s.qch.jp-Shortcut-Redirector/actions" target="_blank" rel="noopener">GitHub Actions ↗</a>
             </div>
         </div>
     </header>
 
     <main class="main">
         <!-- Git Sync & Deploy パネル -->
-        <section class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <span>Git Sync &amp; Deploy</span>
-                    <span id="dirtyFilesBadge" class="badge badge-gray" style="display:none;"></span>
+        <section class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span>■ Git 同期・デプロイ操作</span>
+                    <span id="dirtyFilesBadge" class="status-pill pill-warn" style="display:none;"></span>
                 </div>
-                <div class="git-row">
+                <div class="row">
                     <button type="button" id="btnRefresh" class="btn-sm">状態更新</button>
                     <button type="button" id="btnBuildTest" class="btn-sm">ビルドテスト</button>
                     <button type="button" id="btnDiscard" class="btn-sm btn-danger" style="display:none;">links.json 変更破棄</button>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="panel-body">
                 <div class="git-controls">
-                    <div class="git-row">
-                        <input id="commitMessage" class="input" type="text" placeholder="コミットメッセージ（空欄で自動入力: Update shortcuts in links.json）">
-                        <label class="checkbox-row" style="font-size:12.5px; color:var(--text-sub);">
+                    <div class="row">
+                        <input id="commitMessage" class="input" type="text" placeholder="コミットメッセージ（空欄時: Update shortcuts in links.json）">
+                        <label class="checkbox-row">
                             <input type="checkbox" id="stageAllCheck">
-                            全変更を含める (git add -A)
+                            全変更を対象にする (git add -A)
                         </label>
                     </div>
-                    <div class="git-row">
-                        <button type="button" id="btnSync" class="btn-success">🚀 Sync &amp; Deploy (Commit → Pull → Push)</button>
-                        <button type="button" id="btnPull">↓ Pull</button>
-                        <button type="button" id="btnCommit">✓ Commit</button>
-                        <button type="button" id="btnPush">↑ Push</button>
+                    <div class="row">
+                        <button type="button" id="btnSync" class="btn-sync">★ Sync &amp; Deploy（Commit → Pull → Push）</button>
+                        <button type="button" id="btnPull">↓ Pull（取得）</button>
+                        <button type="button" id="btnCommit">✓ Commit（記録）</button>
+                        <button type="button" id="btnPush">↑ Push（送信）</button>
                     </div>
                 </div>
 
                 <div class="tabs">
                     <button type="button" class="tab-btn active" data-tab="log">実行ログ</button>
-                    <button type="button" class="tab-btn" data-tab="diff">links.json Diff</button>
-                    <button type="button" class="tab-btn" data-tab="commits">最近のコミット</button>
+                    <button type="button" class="tab-btn" data-tab="diff">links.json 差分 (Diff)</button>
+                    <button type="button" class="tab-btn" data-tab="commits">最近のコミット履歴</button>
                 </div>
 
                 <div id="tab-log">
-                    <pre id="consoleOutput" class="console">準備完了。ショートカットを編集後、「Sync &amp; Deploy」で GitHub Pages へ反映できます。</pre>
+                    <pre id="consoleOutput" class="console">準備完了。ショートカットを編集後、「Sync &amp; Deploy」を押すと GitHub Pages へ自動反映されます。</pre>
                 </div>
                 <div id="tab-diff" style="display:none;">
                     <pre id="diffOutput" class="console">未コミットの差分はありません。</pre>
@@ -580,21 +580,21 @@
         </section>
 
         <!-- ショートカット一覧パネル -->
-        <section class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <span>ショートカット一覧</span>
-                    <span id="countBadge" class="badge badge-blue">0件</span>
+        <section class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span>■ ショートカット一覧</span>
+                    <span id="countBadge" class="status-pill pill-info">0件</span>
                 </div>
-                <button type="button" id="btnOpenAdd" class="btn-primary">+ 新規ショートカット追加</button>
+                <button type="button" id="btnOpenAdd" class="btn-primary">＋ 新規ショートカット追加</button>
             </div>
-            <div class="card-body">
+            <div class="panel-body">
                 <div class="toolbar">
-                    <input id="searchInput" class="input" type="search" placeholder="スラッグ・タイトル・URLで検索...">
+                    <input id="searchInput" class="input" type="search" placeholder="スラッグ・名称・URLで検索... ( / キーで入力)">
                     <div class="filter-group">
                         <button type="button" class="btn-sm filter-btn btn-primary" data-filter="all">すべて</button>
-                        <button type="button" class="btn-sm filter-btn" data-filter="public">公開</button>
-                        <button type="button" class="btn-sm filter-btn" data-filter="private">非公開</button>
+                        <button type="button" class="btn-sm filter-btn" data-filter="public">公開のみ</button>
+                        <button type="button" class="btn-sm filter-btn" data-filter="private">非公開のみ</button>
                     </div>
                 </div>
 
@@ -602,8 +602,8 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>ショートカット</th>
-                                <th>タイトル / 説明</th>
+                                <th>パス</th>
+                                <th>名称 / 説明</th>
                                 <th>遷移先 URL</th>
                                 <th>トップ掲載</th>
                                 <th style="text-align:right;">操作</th>
@@ -620,23 +620,23 @@
     <div id="linkModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal">
             <div class="modal-header">
-                <h2 id="modalTitle" style="font-size:16px;">ショートカットを追加</h2>
+                <h2 id="modalTitle" style="font-size:14.5px;">ショートカットを追加</h2>
                 <button type="button" id="btnCloseModal" class="btn-sm">✕</button>
             </div>
             <form id="linkForm">
                 <div class="modal-body">
                     <input type="hidden" id="fieldOriginalSlug">
                     <div class="field">
-                        <label for="fieldSlug">スラッグ（パス） *</label>
+                        <label for="fieldSlug">スラッグ（パス）※必須</label>
                         <input id="fieldSlug" class="input" type="text" required placeholder="例: ck">
                         <div id="slugPreview" class="preview-url">https://__SITE_DOMAIN__/</div>
                     </div>
                     <div class="field">
-                        <label for="fieldUrl">遷移先 URL *</label>
+                        <label for="fieldUrl">遷移先 URL ※必須</label>
                         <input id="fieldUrl" class="input" type="url" required placeholder="https://clipkit.qch.jp">
                     </div>
                     <div class="field">
-                        <label for="fieldTitle">タイトル（任意）</label>
+                        <label for="fieldTitle">名称（任意）</label>
                         <input id="fieldTitle" class="input" type="text" placeholder="例: ClipKit">
                     </div>
                     <div class="field">
@@ -645,7 +645,7 @@
                     </div>
                     <label class="checkbox-row">
                         <input type="checkbox" id="fieldPublic" checked>
-                        <span>トップページ (s.qch.jp) の一覧に表示する</span>
+                        <span>トップページ (s.qch.jp) のリンク集に掲載する</span>
                     </label>
                 </div>
                 <div class="modal-footer">
@@ -715,6 +715,18 @@
                 .join('\n\n');
         }
 
+        function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function escapeAttr(s) {
+            return escapeHtml(s).replace(/'/g, '&#39;');
+        }
+
         function renderLinks() {
             const query = $('searchInput').value.trim().toLowerCase();
             const filtered = allLinks.filter((item) => {
@@ -731,28 +743,28 @@
 
             const tbody = $('linksTableBody');
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:28px; color:var(--text-sub);">該当するショートカットがありません</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:24px; color:#635b4e;">該当するショートカットがありません</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = filtered
                 .map((item) => {
                     const shortUrl = `https://${SITE_DOMAIN}/${item.slug}`;
-                    const pubBadge = item.public
-                        ? `<button type="button" class="toggle-btn badge-green" data-action="toggle" data-slug="${escapeAttr(item.slug)}">公開</button>`
-                        : `<button type="button" class="toggle-btn badge-gray" data-action="toggle" data-slug="${escapeAttr(item.slug)}">非公開</button>`;
+                    const pubBtn = item.public
+                        ? `<button type="button" class="btn-sm toggle-pub" data-action="toggle" data-slug="${escapeAttr(item.slug)}">公開中</button>`
+                        : `<button type="button" class="btn-sm toggle-priv" data-action="toggle" data-slug="${escapeAttr(item.slug)}">非公開</button>`;
 
                     return `
                         <tr>
                             <td class="slug-cell">/${escapeHtml(item.slug)}</td>
                             <td>
-                                <div style="font-weight:600;">${escapeHtml(item.title)}</div>
+                                <div style="font-weight:bold;">${escapeHtml(item.title)}</div>
                                 ${item.description ? `<div class="subtext">${escapeHtml(item.description)}</div>` : ''}
                             </td>
                             <td class="url-cell">
                                 <a href="${escapeAttr(item.url)}" target="_blank" rel="noopener" title="${escapeAttr(item.url)}">${escapeHtml(item.url)}</a>
                             </td>
-                            <td>${pubBadge}</td>
+                            <td>${pubBtn}</td>
                             <td>
                                 <div class="actions-cell">
                                     <button type="button" class="btn-sm" data-action="copy" data-url="${escapeAttr(shortUrl)}">コピー</button>
@@ -766,18 +778,6 @@
                 .join('');
         }
 
-        function escapeHtml(s) {
-            return String(s)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
-        }
-
-        function escapeAttr(s) {
-            return escapeHtml(s).replace(/'/g, '&#39;');
-        }
-
         function renderGitStatus(status) {
             $('branchBadge').textContent = `branch: ${status.branch}`;
             if (status.actionsUrl) {
@@ -785,22 +785,21 @@
             }
 
             const syncBadge = $('syncBadge');
-            syncBadge.className = 'badge';
+            syncBadge.className = 'status-pill';
             if (status.dirty) {
-                syncBadge.classList.add('badge-amber');
+                syncBadge.classList.add('pill-warn');
                 syncBadge.textContent = `未コミット変更あり (${status.files.length})`;
             } else if (status.ahead > 0 || status.behind > 0) {
-                syncBadge.classList.add('badge-blue');
+                syncBadge.classList.add('pill-info');
                 syncBadge.textContent = `ahead ${status.ahead} / behind ${status.behind}`;
             } else {
-                syncBadge.classList.add('badge-green');
-                syncBadge.textContent = 'Synced';
+                syncBadge.classList.add('pill-ok');
+                syncBadge.textContent = '同期済み (Synced)';
             }
 
             const dirtyBadge = $('dirtyFilesBadge');
             if (status.files.length > 0) {
-                dirtyBadge.style.display = 'inline-flex';
-                dirtyBadge.className = 'badge badge-amber';
+                dirtyBadge.style.display = 'inline-block';
                 dirtyBadge.textContent = status.files.map((f) => `${f.status} ${f.file}`).join(', ');
             } else {
                 dirtyBadge.style.display = 'none';
@@ -883,12 +882,24 @@
             }
         }
 
-        // Event bindings
         $('btnOpenAdd').addEventListener('click', () => openModal('add'));
         $('btnCloseModal').addEventListener('click', closeModal);
         $('btnCancelModal').addEventListener('click', closeModal);
         $('fieldSlug').addEventListener('input', updateSlugPreview);
         $('searchInput').addEventListener('input', renderLinks);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && $('linkModal').classList.contains('open')) {
+                closeModal();
+            } else if (
+                e.key === '/' &&
+                !$('linkModal').classList.contains('open') &&
+                document.activeElement.tagName !== 'INPUT'
+            ) {
+                e.preventDefault();
+                $('searchInput').focus();
+            }
+        });
 
         document.querySelectorAll('.filter-btn').forEach((btn) => {
             btn.addEventListener('click', () => {
@@ -933,8 +944,7 @@
                 }
                 showToast(`/${payload.slug} を保存しました`);
                 appendLog(`links.json を更新: /${payload.slug} -> ${payload.url}`);
-                const gitStatus = await api('/api/git/status');
-                renderGitStatus(gitStatus);
+                renderGitStatus(await api('/api/git/status'));
             } catch (err) {
                 showToast(err.message, true);
             }

@@ -76,7 +76,7 @@ function getDisplayHost(url) {
 function renderPublicLinksHtml(entries) {
   const publicEntries = entries.filter((entry) => entry.public && entry.url);
   if (publicEntries.length === 0) {
-    return `<div class="empty-state">現在公開中のショートカットリンクはありません。</div>`;
+    return `<div class="empty-state">現在、公開されているショートカットリンクはありません。</div>`;
   }
 
   return publicEntries
@@ -92,22 +92,22 @@ function renderPublicLinksHtml(entries) {
         `${entry.slug} ${entry.title} ${entry.description} ${entry.url}`.toLowerCase()
       );
 
-      return `        <div class="link-card" data-search="${searchAttr}">
-            <a href="${escapeHtml(shortPath)}" class="link-main" rel="noopener">
-                <div class="link-badge">/${safeSlug}</div>
-                <div class="link-body">
-                    <div class="link-title">${safeTitle}</div>
-                    <div class="link-meta">
-                        <span class="link-short">${safeShortLabel}</span>
-                        <span class="link-sep">·</span>
-                        <span class="link-dest">${safeDesc}</span>
-                    </div>
+      return `        <div class="link-row" data-search="${searchAttr}">
+            <div class="col-slug">
+                <a href="${escapeHtml(shortPath)}" class="slug-link" rel="noopener">/${safeSlug}</a>
+            </div>
+            <div class="col-info">
+                <a href="${escapeHtml(shortPath)}" class="title-link" rel="noopener">${safeTitle}</a>
+                <div class="desc-line">
+                    <span class="short-url">${safeShortLabel}</span>
+                    <span class="sep">→</span>
+                    <span class="dest-host">${safeDesc}</span>
                 </div>
-                <span class="link-arrow" aria-hidden="true">→</span>
-            </a>
-            <button type="button" class="copy-btn" data-url="${safeShortUrl}" aria-label="${safeShortLabel} をコピー" title="URLをコピー">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
+            </div>
+            <div class="col-actions">
+                <a href="${escapeHtml(shortPath)}" class="retro-btn btn-go" rel="noopener">開く</a>
+                <button type="button" class="retro-btn copy-btn" data-url="${safeShortUrl}" aria-label="${safeShortLabel} をコピー" title="短縮URLをコピー">コピー</button>
+            </div>
         </div>`;
     })
     .join('\n');
@@ -130,88 +130,75 @@ function renderRedirectHtml(entry) {
   <link rel="canonical" href="${safeUrl}">
   <title>${safeTitle} | ${SITE_DOMAIN}</title>
   <style>
-    :root {
-      color-scheme: light dark;
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --border: #e2e8f0;
-      --text: #0f172a;
-      --muted: #64748b;
-      --accent: #2563eb;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0b1120;
-        --card: #111827;
-        --border: #1e293b;
-        --text: #f8fafc;
-        --muted: #94a3b8;
-        --accent: #60a5fa;
-      }
-    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-color: #f3efe4;
+      color: #2c2822;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "MS PGothic", sans-serif;
+      line-height: 1.7;
     }
-    .card {
+    .frame {
       width: 100%;
-      max-width: 440px;
-      padding: 32px 28px;
-      border-radius: 18px;
-      background: var(--card);
-      border: 1px solid var(--border);
+      max-width: 460px;
+      background-color: #fdfbf6;
+      border: 3px double #a89f8c;
+      padding: 28px 24px;
       text-align: center;
-      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+      box-shadow: 3px 3px 0 #dcd5c5;
     }
-    .spinner {
-      width: 28px;
-      height: 28px;
-      margin: 0 auto 18px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .slug {
+    .tag {
       display: inline-block;
-      margin-bottom: 10px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      color: var(--accent);
-      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      padding: 2px 10px;
+      margin-bottom: 12px;
+      background-color: #ece6d8;
+      border: 1px solid #bfb6a2;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 13px;
+      color: #3d362c;
     }
-    h1 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+    h1 {
+      font-size: 17px;
+      font-weight: bold;
+      color: #2c2822;
+      margin-bottom: 8px;
+    }
     .dest {
       font-size: 13px;
-      color: var(--muted);
+      color: #5b5347;
       word-break: break-all;
       margin-bottom: 18px;
+      padding: 8px 10px;
+      background-color: #f6f2e8;
+      border: 1px dashed #c4bba6;
     }
-    a {
-      color: var(--accent);
+    .go-link {
+      display: inline-block;
+      padding: 6px 16px;
+      background-color: #ebe5d6;
+      color: #1c4c7c;
+      border: 2px solid;
+      border-color: #ffffff #9c927d #9c927d #ffffff;
+      text-decoration: underline;
       font-size: 13px;
-      text-decoration: none;
+      font-weight: bold;
     }
-    a:hover { text-decoration: underline; }
+    .go-link:hover {
+      background-color: #e2dac7;
+    }
   </style>
   <script>window.location.replace(${jsUrl});</script>
 </head>
 <body>
-  <main class="card">
-    <div class="spinner" aria-hidden="true"></div>
-    <div class="slug">${SITE_DOMAIN}/${safeSlug}</div>
-    <h1>リダイレクトしています…</h1>
+  <main class="frame">
+    <div class="tag">${SITE_DOMAIN}/${safeSlug}</div>
+    <h1>移動しています…</h1>
     <p class="dest">${safeHost}</p>
-    <a href="${safeUrl}">自動で移動しない場合はこちら</a>
+    <a class="go-link" href="${safeUrl}">自動で移動しない場合はこちら</a>
   </main>
 </body>
 </html>
