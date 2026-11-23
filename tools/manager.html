@@ -512,6 +512,263 @@
             border-color: #8c2f24;
             color: #8c2f24;
         }
+
+        .pill-err { background-color: #f9ebe8; border-color: #b57c74; color: #8c2f24; }
+
+        /* メイン機能切替タブ（ショートカット管理 / Pages エクスプローラー） */
+        .workspace-tabs {
+            display: flex;
+            gap: 6px;
+            border-bottom: 2px solid #9e9582;
+            padding-left: 4px;
+        }
+
+        .ws-tab {
+            padding: 8px 16px;
+            font-size: 13.5px;
+            font-weight: bold;
+            background-color: #e6dfd0;
+            color: #4f483d;
+            border: 2px solid #9e9582;
+            border-bottom: none;
+            margin-bottom: -2px;
+        }
+
+        .ws-tab.active {
+            background-color: #fdfbf6;
+            color: #1c4c7c;
+            border-top: 3px solid #465d73;
+            border-bottom: 2px solid #fdfbf6;
+        }
+
+        /* Pages Explorer */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 13px;
+            padding: 6px 10px;
+            background-color: #f6f2e7;
+            border: 1px solid #cbc2ae;
+            margin-bottom: 10px;
+        }
+
+        .crumb-btn {
+            padding: 1px 6px;
+            font-size: 12.5px;
+            border-width: 1px;
+            color: #1c4c7c;
+            background-color: #efe9d8;
+        }
+
+        .dropzone {
+            border: 2px dashed #b5ab94;
+            background-color: #f8f5ec;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 12.5px;
+            color: #554e42;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .dropzone.dragover {
+            background-color: #e8f0e4;
+            border-color: #3d6b47;
+            color: #264d24;
+        }
+
+        .entry-name-btn {
+            background: transparent;
+            border: none;
+            padding: 0;
+            font-size: 13.5px;
+            font-weight: bold;
+            color: #1c4c7c;
+            text-decoration: underline;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .entry-name-btn:hover {
+            color: #8c3a2b;
+            background: transparent;
+        }
+
+        /* 内蔵コードエディタ */
+        .editor-shell {
+            margin-top: 16px;
+            border: 2px solid #9e9582;
+            background-color: #fdfbf6;
+        }
+
+        .editor-bar {
+            background-color: #e9e2d0;
+            border-bottom: 2px solid #b5ab94;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .editor-workspace {
+            display: grid;
+            grid-template-columns: 56px 1fr;
+            height: 440px;
+            background-color: #fdfbf6;
+            border-bottom: 1px solid #b8ae98;
+            position: relative;
+        }
+
+        .editor-gutter {
+            background-color: #f1ece0;
+            border-right: 1px solid #cbc2ae;
+            color: #7d7463;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 13px;
+            line-height: 20px;
+            padding: 10px 6px 10px 4px;
+            text-align: right;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .gutter-line { height: 20px; white-space: nowrap; }
+        .gutter-err { color: #a12c22; font-weight: bold; background-color: rgba(181, 66, 56, 0.14); }
+        .gutter-warn { color: #8c6216; font-weight: bold; background-color: rgba(194, 146, 48, 0.16); }
+
+        .editor-stage {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .editor-highlight,
+        .editor-textarea {
+            position: absolute;
+            inset: 0;
+            margin: 0;
+            padding: 10px 12px;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 13px;
+            line-height: 20px;
+            tab-size: 2;
+            white-space: pre;
+            overflow: auto;
+            border: none;
+            outline: none;
+            letter-spacing: 0;
+            word-spacing: 0;
+        }
+
+        .editor-highlight {
+            pointer-events: none;
+            color: #2c2822;
+            background-color: #fdfbf6;
+            z-index: 1;
+        }
+
+        .editor-textarea {
+            color: transparent;
+            caret-color: #2c2822;
+            background: transparent;
+            resize: none;
+            z-index: 2;
+        }
+
+        .editor-textarea::selection {
+            background-color: rgba(70, 93, 115, 0.28);
+        }
+
+        /* 温かみのあるシンタックスハイライト配色 */
+        .tok-tag { color: #1c4c7c; font-weight: bold; }
+        .tok-keyword { color: #1f4f82; font-weight: bold; }
+        .tok-attr { color: #7d4b18; }
+        .tok-string { color: #2b6a3e; }
+        .tok-number { color: #6e3a6b; }
+        .tok-comment { color: #7e7a69; font-style: italic; }
+        .tok-punct { color: #6e6556; }
+
+        /* インデント空白・タブの色分け（Indent Rainbow） */
+        .tok-indent { color: rgba(120, 110, 92, 0.42); }
+        .tok-indent-0 { background-color: rgba(212, 186, 130, 0.22); }
+        .tok-indent-1 { background-color: rgba(145, 184, 149, 0.22); }
+        .tok-indent-2 { background-color: rgba(146, 173, 204, 0.22); }
+        .tok-indent-3 { background-color: rgba(204, 155, 146, 0.22); }
+        .tok-trailing { background-color: rgba(181, 66, 56, 0.24); color: #8c2f24; }
+
+        /* 構文チェック診断パネル */
+        .editor-footer {
+            background-color: #f6f2e7;
+            padding: 8px 12px;
+        }
+
+        .diag-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .diag-list {
+            max-height: 130px;
+            overflow: auto;
+            display: grid;
+            gap: 4px;
+        }
+
+        .diag-ok {
+            font-size: 12.5px;
+            color: #2c5e2a;
+            padding: 4px 6px;
+        }
+
+        .diag-item {
+            width: 100%;
+            justify-content: flex-start;
+            text-align: left;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: normal;
+            border: 1px solid #cbc2ae;
+            background-color: #fdfbf6;
+        }
+
+        .diag-err { border-left: 4px solid #a12c22; }
+        .diag-warn { border-left: 4px solid #b88424; }
+        .diag-line { font-family: "Consolas", "Courier New", monospace; font-weight: bold; color: #1c4c7c; min-width: 52px; }
+        .diag-badge { font-weight: bold; font-size: 11px; padding: 0 5px; background-color: #efe9d8; border: 1px solid #cbc2ae; }
+        .diag-msg { color: #2c2822; }
+
+        /* 画像プレビューボックス */
+        .image-preview-box {
+            margin-top: 16px;
+            border: 2px solid #9e9582;
+            background-color: #fdfbf6;
+        }
+
+        .image-stage {
+            padding: 16px;
+            text-align: center;
+            background-color: #f3efe4;
+            border-bottom: 1px solid #cbc2ae;
+        }
+
+        .image-stage img {
+            max-width: 100%;
+            max-height: 360px;
+            border: 1px solid #b8ae98;
+            background-color: #ffffff;
+        }
     </style>
 </head>
 <body>
@@ -579,8 +836,14 @@
             </div>
         </section>
 
+        <!-- メイン機能切り替えタブ -->
+        <div class="workspace-tabs" role="tablist">
+            <button type="button" class="ws-tab active" data-ws="shortcuts" role="tab">■ ショートカット管理 (links.json)</button>
+            <button type="button" class="ws-tab" data-ws="pages" role="tab">■ Pages エクスプローラー (src/pages)</button>
+        </div>
+
         <!-- ショートカット一覧パネル -->
-        <section class="panel">
+        <section class="panel" id="ws-shortcuts">
             <div class="panel-header">
                 <div class="panel-title">
                     <span>■ ショートカット一覧</span>
@@ -614,7 +877,182 @@
                 </div>
             </div>
         </section>
+
+        <!-- Pages エクスプローラーパネル -->
+        <section class="panel" id="ws-pages" style="display:none;">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span>■ Pages エクスプローラー (src/pages)</span>
+                    <span id="pagesCountBadge" class="status-pill pill-info">0項目</span>
+                </div>
+                <div class="row">
+                    <button type="button" id="btnPagesUp" class="btn-sm">↑ 上へ</button>
+                    <button type="button" id="btnPagesRefresh" class="btn-sm">更新</button>
+                    <button type="button" id="btnNewPageFile" class="btn-primary btn-sm">＋ 新規ファイル</button>
+                    <button type="button" id="btnNewPageFolder" class="btn-sm">＋ フォルダ作成</button>
+                    <button type="button" id="btnUploadTrigger" class="btn-sm">↑ アップロード</button>
+                    <input type="file" id="pagesUploadInput" multiple style="display:none;">
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="pagesBreadcrumb" class="breadcrumb"></div>
+
+                <div id="pagesDropzone" class="dropzone">
+                    <span>📁 HTML・画像（PNG/JPG/GIF/WebP/SVG）・CSS・JS・サンプルファイル等をここへドラッグ＆ドロップして追加できます</span>
+                    <span class="subtext">公開先: https://__SITE_DOMAIN__/pages/...</span>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>名前</th>
+                                <th>種類 / サイズ</th>
+                                <th>更新日時</th>
+                                <th style="text-align:right;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pagesTableBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- 内蔵コードエディタ（HTML/CSS/JS/JSON/TXT 編集用） -->
+                <div id="codeEditorShell" class="editor-shell" style="display:none;">
+                    <div class="editor-bar">
+                        <div class="row">
+                            <strong id="editorFilePath" style="font-family:Consolas,monospace;"></strong>
+                            <span id="editorDirtyBadge" class="status-pill pill-warn" style="display:none;">* 未保存</span>
+                        </div>
+                        <div class="row">
+                            <label class="checkbox-row" title="インデントの空白やタブを色分け表示します">
+                                <input type="checkbox" id="editorShowIndent" checked>
+                                インデント色分け
+                            </label>
+                            <button type="button" id="btnSaveCode" class="btn-sync btn-sm">💾 保存 (Ctrl+S)</button>
+                            <a id="btnPreviewCode" class="btn-link btn-sm" href="#" target="_blank" rel="noopener">プレビュー ↗</a>
+                            <button type="button" id="btnCloseEditor" class="btn-sm">閉じる</button>
+                        </div>
+                    </div>
+                    <div class="editor-workspace">
+                        <div id="editorGutter" class="editor-gutter" aria-hidden="true"></div>
+                        <div class="editor-stage">
+                            <pre id="editorHighlight" class="editor-highlight" aria-hidden="true"></pre>
+                            <textarea id="editorTextarea" class="editor-textarea" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+                        </div>
+                    </div>
+                    <div class="editor-footer">
+                        <div class="diag-header">
+                            <div class="row">
+                                <span id="editorDiagSummary" class="status-pill pill-ok">✓ 構文チェック OK</span>
+                                <span class="subtext">（HTML閉じタグ・CSS括弧・JS構文・重複ID等をリアルタイム検出）</span>
+                            </div>
+                            <span id="editorCursorInfo" class="subtext" style="font-family:Consolas,monospace;">行 1, 列 1</span>
+                        </div>
+                        <div id="editorDiagList" class="diag-list"></div>
+                    </div>
+                </div>
+
+                <!-- 画像プレビューパネル -->
+                <div id="imagePreviewBox" class="image-preview-box" style="display:none;">
+                    <div class="editor-bar">
+                        <strong id="imagePreviewPath" style="font-family:Consolas,monospace;"></strong>
+                        <div class="row">
+                            <button type="button" id="btnCopyImgTag" class="btn-sm">imgタグをコピー</button>
+                            <a id="btnOpenImgRaw" class="btn-link btn-sm" href="#" target="_blank" rel="noopener">原寸で開く ↗</a>
+                            <button type="button" id="btnCloseImgPreview" class="btn-sm">閉じる</button>
+                        </div>
+                    </div>
+                    <div class="image-stage">
+                        <img id="imagePreviewEl" src="" alt="プレビュー画像">
+                    </div>
+                    <div class="editor-footer">
+                        <span id="imagePreviewMeta" class="subtext"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <!-- 新規ファイル作成モーダル -->
+    <div id="newFileModal" class="modal-backdrop" role="dialog" aria-modal="true">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 style="font-size:14.5px;">新規ファイルを作成</h2>
+                <button type="button" class="btn-sm" data-close-modal="newFileModal">✕</button>
+            </div>
+            <form id="newFileForm">
+                <div class="modal-body">
+                    <div class="field">
+                        <label for="newFileName">ファイル名 ※必須</label>
+                        <input id="newFileName" class="input" type="text" required placeholder="例: article.html / style.css / app.js">
+                    </div>
+                    <div class="field">
+                        <label for="newFileTemplate">ひな形テンプレート</label>
+                        <select id="newFileTemplate" class="input">
+                            <option value="article_html">HTML 記事ページ（s.qch.jp レトロ風ひな形）</option>
+                            <option value="blank_html">HTML（最小構成）</option>
+                            <option value="css">CSS スタイルシート</option>
+                            <option value="js">JavaScript</option>
+                            <option value="empty">空ファイル</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-close-modal="newFileModal">キャンセル</button>
+                    <button type="submit" class="btn-primary">作成して編集を開く</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 新規フォルダ作成モーダル -->
+    <div id="newFolderModal" class="modal-backdrop" role="dialog" aria-modal="true">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 style="font-size:14.5px;">新規フォルダを作成</h2>
+                <button type="button" class="btn-sm" data-close-modal="newFolderModal">✕</button>
+            </div>
+            <form id="newFolderForm">
+                <div class="modal-body">
+                    <div class="field">
+                        <label for="newFolderName">フォルダ名 ※必須</label>
+                        <input id="newFolderName" class="input" type="text" required placeholder="例: images / guides / 2026">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-close-modal="newFolderModal">キャンセル</button>
+                    <button type="submit" class="btn-primary">作成する</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 名前変更・移動モーダル -->
+    <div id="renameModal" class="modal-backdrop" role="dialog" aria-modal="true">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 style="font-size:14.5px;">名前変更 / フォルダ移動</h2>
+                <button type="button" class="btn-sm" data-close-modal="renameModal">✕</button>
+            </div>
+            <form id="renameForm">
+                <div class="modal-body">
+                    <input type="hidden" id="renameFromPath">
+                    <div class="field">
+                        <label for="renameTargetDir">移動先フォルダ</label>
+                        <select id="renameTargetDir" class="input"></select>
+                    </div>
+                    <div class="field">
+                        <label for="renameNewName">新しい名前 ※必須</label>
+                        <input id="renameNewName" class="input" type="text" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-close-modal="renameModal">キャンセル</button>
+                    <button type="submit" class="btn-primary">変更を適用</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- 追加・編集モーダル -->
     <div id="linkModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -1102,10 +1540,501 @@
             await runGitAction('btnDiscard', '変更破棄', '/api/git/discard');
         });
 
+        // ---- ワークスペース切り替え（ショートカット / Pages エクスプローラー） ----
+        let currentPagesDir = '';
+        let currentPagesData = { dir: '', entries: [], allFolders: [''] };
+        let openEditorPath = null;
+        let openEditorDirty = false;
+        let codeEditor = null;
+
+        document.querySelectorAll('.ws-tab').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.ws;
+                document.querySelectorAll('.ws-tab').forEach((b) => b.classList.remove('active'));
+                btn.classList.add('active');
+                $('ws-shortcuts').style.display = target === 'shortcuts' ? 'block' : 'none';
+                $('ws-pages').style.display = target === 'pages' ? 'block' : 'none';
+                if (target === 'pages') {
+                    loadPagesDir(currentPagesDir);
+                }
+            });
+        });
+
+        document.querySelectorAll('[data-close-modal]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                $(btn.dataset.closeModal).classList.remove('open');
+            });
+        });
+
+        function formatBytes(bytes) {
+            if (bytes < 1024) return `${bytes} B`;
+            if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+            return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+        }
+
+        function formatDate(iso) {
+            try {
+                return new Date(iso).toLocaleString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                });
+            } catch {
+                return iso;
+            }
+        }
+
+        function getFileIcon(entry) {
+            if (entry.isDir) return '📁';
+            if (entry.isImage) return '🖼';
+            if (entry.ext === '.html' || entry.ext === '.htm') return '🌐';
+            if (entry.ext === '.css' || entry.ext === '.js' || entry.ext === '.json') return '📝';
+            return '📄';
+        }
+
+        function getFileTemplate(templateKey, fileName) {
+            const title = fileName.replace(/\.[^.]+$/, '') || '新しいページ';
+            if (templateKey === 'article_html') {
+                return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title} | s.qch.jp</title>
+  <style>
+    body {
+      background-color: #f3efe4;
+      color: #2c2822;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      line-height: 1.8;
+      margin: 0;
+      padding: 28px 16px;
+    }
+    .article {
+      max-width: 720px;
+      margin: 0 auto;
+      background-color: #fdfbf6;
+      border: 3px double #9e9582;
+      padding: 24px 28px;
+      box-shadow: 4px 4px 0 #d8d0be;
+    }
+    h1 {
+      font-size: 22px;
+      border-bottom: 2px solid #b8ae98;
+      padding-bottom: 8px;
+      margin-top: 0;
+    }
+    a { color: #1c4c7c; }
+  </style>
+</head>
+<body>
+  <article class="article">
+    <h1>${title}</h1>
+    <p>ここに本文を書きます。</p>
+    <hr>
+    <p><a href="/">s.qch.jp トップへ戻る</a></p>
+  </article>
+</body>
+</html>
+`;
+            }
+            if (templateKey === 'blank_html') {
+                return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+</head>
+<body>
+  <h1>${title}</h1>
+</body>
+</html>
+`;
+            }
+            if (templateKey === 'css') {
+                return `/* ${fileName} */\nbody {\n  font-family: sans-serif;\n}\n`;
+            }
+            if (templateKey === 'js') {
+                return `// ${fileName}\ndocument.addEventListener('DOMContentLoaded', () => {\n  console.log('Loaded: ${fileName}');\n});\n`;
+            }
+            return '';
+        }
+
+        function renderBreadcrumb(dir) {
+            const parts = dir ? dir.split('/').filter(Boolean) : [];
+            let html = `<button type="button" class="crumb-btn" data-dir="">pages</button>`;
+            let acc = '';
+            for (const part of parts) {
+                acc = acc ? `${acc}/${part}` : part;
+                html += ` <span>/</span> <button type="button" class="crumb-btn" data-dir="${escapeAttr(acc)}">${escapeHtml(part)}</button>`;
+            }
+            $('pagesBreadcrumb').innerHTML = html;
+            $('btnPagesUp').disabled = !dir;
+        }
+
+        function renderPagesTable(data) {
+            currentPagesData = data;
+            currentPagesDir = data.dir || '';
+            renderBreadcrumb(currentPagesDir);
+            const entries = data.entries || [];
+            $('pagesCountBadge').textContent = `${entries.length}項目`;
+
+            const tbody = $('pagesTableBody');
+            if (entries.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:24px; color:#635b4e;">このフォルダは空です。新規ファイル作成やドラッグ＆ドロップでファイルを追加できます。</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = entries
+                .map((entry) => {
+                    const icon = getFileIcon(entry);
+                    const typeText = entry.isDir ? 'フォルダ' : `${entry.ext || 'file'} · ${formatBytes(entry.size)}`;
+                    const openLabel = entry.isDir ? '開く' : entry.isText ? '編集' : entry.isImage ? '表示' : '確認';
+                    return `
+                        <tr>
+                            <td>
+                                <button type="button" class="entry-name-btn" data-paction="open" data-rel="${escapeAttr(entry.relPath)}">
+                                    ${icon} ${escapeHtml(entry.name)}
+                                </button>
+                            </td>
+                            <td class="subtext" style="font-family:Consolas,monospace;">${escapeHtml(typeText)}</td>
+                            <td class="subtext">${escapeHtml(formatDate(entry.mtime))}</td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button type="button" class="btn-sm" data-paction="open" data-rel="${escapeAttr(entry.relPath)}">${openLabel}</button>
+                                    ${!entry.isDir ? `<a class="btn-link btn-sm" href="${escapeAttr(entry.previewUrl)}" target="_blank" rel="noopener">プレビュー ↗</a>` : ''}
+                                    <button type="button" class="btn-sm" data-paction="copy-url" data-url="${escapeAttr(entry.publicUrl)}">URLコピー</button>
+                                    <button type="button" class="btn-sm" data-paction="rename" data-rel="${escapeAttr(entry.relPath)}">名前変更/移動</button>
+                                    <button type="button" class="btn-sm btn-danger" data-paction="delete" data-rel="${escapeAttr(entry.relPath)}">削除</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                })
+                .join('');
+        }
+
+        async function loadPagesDir(dir = '') {
+            try {
+                const data = await api(`/api/pages/list?dir=${encodeURIComponent(dir)}`);
+                renderPagesTable(data);
+            } catch (err) {
+                showToast(err.message, true);
+            }
+        }
+
+        function ensureCodeEditor() {
+            if (codeEditor) return codeEditor;
+            codeEditor = window.RetroCodeEditor.createEditor({
+                textarea: $('editorTextarea'),
+                highlightEl: $('editorHighlight'),
+                gutterEl: $('editorGutter'),
+                diagListEl: $('editorDiagList'),
+                diagSummaryEl: $('editorDiagSummary'),
+                cursorInfoEl: $('editorCursorInfo'),
+                onChange: () => {
+                    openEditorDirty = true;
+                    $('editorDirtyBadge').style.display = 'inline-block';
+                },
+                onSave: () => saveCurrentEditorFile(),
+            });
+            return codeEditor;
+        }
+
+        async function openPageEntry(relPath) {
+            const entry = (currentPagesData.entries || []).find((e) => e.relPath === relPath);
+            if (entry && entry.isDir) {
+                if (openEditorDirty && !confirm('未保存の編集があります。移動してもよろしいですか？')) return;
+                await loadPagesDir(relPath);
+                return;
+            }
+
+            try {
+                const file = await api(`/api/pages/file?path=${encodeURIComponent(relPath)}`);
+                if (file.isText) {
+                    if (openEditorDirty && openEditorPath !== file.relPath) {
+                        if (!confirm('未保存の編集があります。別のファイルを開いてもよろしいですか？')) return;
+                    }
+                    $('imagePreviewBox').style.display = 'none';
+                    $('codeEditorShell').style.display = 'block';
+                    openEditorPath = file.relPath;
+                    openEditorDirty = false;
+                    $('editorFilePath').textContent = `src/pages/${file.relPath}`;
+                    $('editorDirtyBadge').style.display = 'none';
+                    $('btnPreviewCode').href = file.previewUrl;
+                    const ed = ensureCodeEditor();
+                    ed.setShowIndent($('editorShowIndent').checked);
+                    ed.setContent(file.content || '', file.relPath);
+                    $('codeEditorShell').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else if (file.isImage) {
+                    $('codeEditorShell').style.display = 'none';
+                    $('imagePreviewBox').style.display = 'block';
+                    $('imagePreviewPath').textContent = `src/pages/${file.relPath}`;
+                    $('imagePreviewEl').src = `${file.previewUrl}?t=${Date.now()}`;
+                    $('btnOpenImgRaw').href = file.previewUrl;
+                    $('btnCopyImgTag').dataset.imgName = file.name;
+                    $('imagePreviewMeta').textContent = `サイズ: ${formatBytes(file.size)} · 公開URL: ${file.publicUrl}`;
+                    $('imagePreviewBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    window.open(file.previewUrl, '_blank', 'noopener');
+                }
+            } catch (err) {
+                showToast(err.message, true);
+            }
+        }
+
+        async function saveCurrentEditorFile() {
+            if (!openEditorPath || !codeEditor) return;
+            const issues = codeEditor.getIssues();
+            const errCount = issues.filter((i) => i.severity === 'error').length;
+            if (errCount > 0) {
+                if (!confirm(`構文エラーが ${errCount} 件検出されています。このまま保存しますか？`)) {
+                    return;
+                }
+            }
+            try {
+                const content = codeEditor.getContent();
+                const res = await api('/api/pages/file', 'PUT', {
+                    path: openEditorPath,
+                    content,
+                });
+                openEditorDirty = false;
+                $('editorDirtyBadge').style.display = 'none';
+                if (res.listing) renderPagesTable(res.listing);
+                if (!$('commitMessage').value.trim()) {
+                    $('commitMessage').value = `Update pages/${openEditorPath}`;
+                }
+                showToast(`保存しました: pages/${openEditorPath}`);
+                appendLog(`保存: src/pages/${openEditorPath}`);
+                renderGitStatus(await api('/api/git/status'));
+            } catch (err) {
+                showToast(err.message, true);
+            }
+        }
+
+        async function uploadFiles(fileList) {
+            const files = Array.from(fileList || []);
+            if (files.length === 0) return;
+            for (const file of files) {
+                try {
+                    const dataBase64 = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            const str = String(reader.result || '');
+                            const comma = str.indexOf(',');
+                            resolve(comma >= 0 ? str.slice(comma + 1) : str);
+                        };
+                        reader.onerror = () => reject(new Error('ファイル読み込みに失敗しました'));
+                        reader.readAsDataURL(file);
+                    });
+                    const res = await api('/api/pages/upload', 'POST', {
+                        dir: currentPagesDir,
+                        filename: file.name,
+                        dataBase64,
+                    });
+                    if (res.listing) renderPagesTable(res.listing);
+                    appendLog(`アップロード完了: src/pages/${res.relPath} (${formatBytes(res.size)})`);
+                    showToast(`アップロード完了: ${file.name}`);
+                } catch (err) {
+                    showToast(`${file.name}: ${err.message}`, true);
+                }
+            }
+            if (!$('commitMessage').value.trim()) {
+                $('commitMessage').value = `Upload files to pages/${currentPagesDir || ''}`.replace(/\/$/, '');
+            }
+            renderGitStatus(await api('/api/git/status'));
+        }
+
+        // Pages Explorer イベント
+        $('pagesBreadcrumb').addEventListener('click', (e) => {
+            const btn = e.target.closest('.crumb-btn');
+            if (!btn) return;
+            loadPagesDir(btn.dataset.dir || '');
+        });
+
+        $('btnPagesUp').addEventListener('click', () => {
+            if (!currentPagesDir) return;
+            const parts = currentPagesDir.split('/').filter(Boolean);
+            parts.pop();
+            loadPagesDir(parts.join('/'));
+        });
+
+        $('btnPagesRefresh').addEventListener('click', () => loadPagesDir(currentPagesDir));
+
+        $('btnNewPageFile').addEventListener('click', () => {
+            $('newFileName').value = '';
+            $('newFileTemplate').value = 'article_html';
+            $('newFileModal').classList.add('open');
+            $('newFileName').focus();
+        });
+
+        $('newFileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = $('newFileName').value.trim();
+            const tpl = $('newFileTemplate').value;
+            const relPath = currentPagesDir ? `${currentPagesDir}/${name}` : name;
+            try {
+                const content = getFileTemplate(tpl, name);
+                const res = await api('/api/pages/file', 'PUT', { path: relPath, content });
+                $('newFileModal').classList.remove('open');
+                if (res.listing) renderPagesTable(res.listing);
+                showToast(`作成しました: ${name}`);
+                appendLog(`新規作成: src/pages/${relPath}`);
+                renderGitStatus(await api('/api/git/status'));
+                await openPageEntry(relPath);
+            } catch (err) {
+                showToast(err.message, true);
+            }
+        });
+
+        $('btnNewPageFolder').addEventListener('click', () => {
+            $('newFolderName').value = '';
+            $('newFolderModal').classList.add('open');
+            $('newFolderName').focus();
+        });
+
+        $('newFolderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = $('newFolderName').value.trim();
+            try {
+                const res = await api('/api/pages/folder', 'POST', { dir: currentPagesDir, name });
+                $('newFolderModal').classList.remove('open');
+                if (res.listing) renderPagesTable(res.listing);
+                showToast(`フォルダを作成しました: ${name}`);
+                appendLog(`フォルダ作成: src/pages/${res.relPath}`);
+            } catch (err) {
+                showToast(err.message, true);
+            }
+        });
+
+        $('btnUploadTrigger').addEventListener('click', () => $('pagesUploadInput').click());
+        $('pagesUploadInput').addEventListener('change', (e) => {
+            uploadFiles(e.target.files);
+            e.target.value = '';
+        });
+
+        const dropzone = $('pagesDropzone');
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+        dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            uploadFiles(e.dataTransfer.files);
+        });
+
+        $('pagesTableBody').addEventListener('click', async (e) => {
+            const btn = e.target.closest('button[data-paction]');
+            if (!btn) return;
+            const action = btn.dataset.paction;
+            const rel = btn.dataset.rel;
+
+            if (action === 'open') {
+                await openPageEntry(rel);
+                return;
+            }
+            if (action === 'copy-url') {
+                const url = btn.dataset.url;
+                await navigator.clipboard.writeText(url).catch(() => {});
+                showToast(`公開URLをコピー: ${url}`);
+                return;
+            }
+            if (action === 'rename') {
+                const parts = rel.split('/');
+                const currentName = parts.pop();
+                const parentDir = parts.join('/');
+                $('renameFromPath').value = rel;
+                $('renameNewName').value = currentName;
+                const select = $('renameTargetDir');
+                select.innerHTML = (currentPagesData.allFolders || [''])
+                    .map((folder) => {
+                        const label = folder ? `pages/${folder}` : 'pages/（ルート）';
+                        const selected = folder === parentDir ? 'selected' : '';
+                        return `<option value="${escapeAttr(folder)}" ${selected}>${escapeHtml(label)}</option>`;
+                    })
+                    .join('');
+                $('renameModal').classList.add('open');
+                $('renameNewName').focus();
+                return;
+            }
+            if (action === 'delete') {
+                if (!confirm(`"src/pages/${rel}" を削除しますか？（フォルダの場合は中身もすべて削除されます）`)) return;
+                try {
+                    const res = await api(`/api/pages/entry?path=${encodeURIComponent(rel)}`, 'DELETE');
+                    if (openEditorPath === rel) {
+                        openEditorPath = null;
+                        openEditorDirty = false;
+                        $('codeEditorShell').style.display = 'none';
+                    }
+                    if (res.listing) renderPagesTable(res.listing);
+                    if (!$('commitMessage').value.trim()) {
+                        $('commitMessage').value = `Remove pages/${rel}`;
+                    }
+                    showToast(`削除しました: ${rel}`);
+                    appendLog(`削除: src/pages/${rel}`);
+                    renderGitStatus(await api('/api/git/status'));
+                } catch (err) {
+                    showToast(err.message, true);
+                }
+            }
+        });
+
+        $('renameForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const from = $('renameFromPath').value;
+            const targetDir = $('renameTargetDir').value;
+            const newName = $('renameNewName').value.trim();
+            const to = targetDir ? `${targetDir}/${newName}` : newName;
+            try {
+                const res = await api('/api/pages/rename', 'POST', { from, to });
+                $('renameModal').classList.remove('open');
+                if (openEditorPath === from) {
+                    openEditorPath = res.to;
+                    $('editorFilePath').textContent = `src/pages/${res.to}`;
+                }
+                await loadPagesDir(currentPagesDir);
+                if (!$('commitMessage').value.trim()) {
+                    $('commitMessage').value = `Move/rename pages/${from} -> ${to}`;
+                }
+                showToast(`変更しました: ${to}`);
+                appendLog(`移動/名前変更: src/pages/${from} -> src/pages/${to}`);
+                renderGitStatus(await api('/api/git/status'));
+            } catch (err) {
+                showToast(err.message, true);
+            }
+        });
+
+        $('btnSaveCode').addEventListener('click', saveCurrentEditorFile);
+        $('editorShowIndent').addEventListener('change', (e) => {
+            if (codeEditor) codeEditor.setShowIndent(e.target.checked);
+        });
+        $('btnCloseEditor').addEventListener('click', () => {
+            if (openEditorDirty && !confirm('未保存の変更があります。エディタを閉じてもよろしいですか？')) return;
+            openEditorPath = null;
+            openEditorDirty = false;
+            $('codeEditorShell').style.display = 'none';
+        });
+
+        $('btnCopyImgTag').addEventListener('click', async () => {
+            const name = $('btnCopyImgTag').dataset.imgName || '';
+            const tag = `<img src="./${name}" alt="">`;
+            await navigator.clipboard.writeText(tag).catch(() => {});
+            showToast(`コピーしました: ${tag}`);
+        });
+        $('btnCloseImgPreview').addEventListener('click', () => {
+            $('imagePreviewBox').style.display = 'none';
+        });
+
         loadAll().catch((err) => {
             appendLog(`初期読み込みエラー: ${err.message}`);
             showToast('読み込みに失敗しました', true);
         });
     </script>
+    <script src="/assets/editor.js"></script>
 </body>
 </html>

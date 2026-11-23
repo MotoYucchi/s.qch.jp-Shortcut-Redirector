@@ -14,9 +14,145 @@ const {
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 const MANAGER_HTML_PATH = path.join(__dirname, 'manager.html');
+const EDITOR_JS_PATH = path.join(__dirname, 'editor.js');
+const PAGES_DIR = path.join(ROOT_DIR, 'src', 'pages');
 const DEFAULT_PORT = Number(process.env.PORT) || 4173;
+const MAX_BODY_BYTES = 25 * 1024 * 1024;
 const API_TOKEN = crypto.randomBytes(24).toString('hex');
 const RESERVED_SLUGS = new Set(['pages', 'index.html', '404.html', 'CNAME', 'cname']);
+
+const TEXT_EXTENSIONS = new Set([
+  '.html', '.htm', '.css', '.js', '.mjs', '.cjs', '.json',
+  '.txt', '.md', '.svg', '.xml', '.csv', '.yaml', '.yml',
+]);
+
+const IMAGE_EXTENSIONS = new Set([
+  '.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.ico', '.bmp', '.avif',
+]);
+
+const MIME_TYPES = {
+  '.html': 'text/html; charset=utf-8',
+  '.htm': 'text/html; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'application/javascript; charset=utf-8',
+  '.mjs': 'application/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.txt': 'text/plain; charset=utf-8',
+  '.md': 'text/markdown; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.gif': 'image/gif',
+  '.webp': 'image/webp',
+  '.ico': 'image/x-icon',
+  '.pdf': 'application/pdf',
+  '.xml': 'application/xml; charset=utf-8',
+};
+
+function ensurePagesDir() {
+  if (!fs.existsSync(PAGES_DIR)) {
+    fs.mkdirSync(PAGES_DIR, { recursive: true });
+  }
+}
+
+function normalizeRelPath(relPath) {
+  return String(relPath || '')
+    .replace(/\\/g, '/')
+    .replace(/^\/+/, '')
+    .replace(/\/+$/, '');
+}
+
+function resolveSafePagesPath(relPath) {
+  ensurePagesDir();
+  const cleanRel = normalizeRelPath(relPath);
+  const fullPath = path.resolve(PAGES_DIR, cleanRel);
+  const rootWithSep = PAGES_DIR.endsWith(path.sep) ? PAGES_DIR : PAGES_DIR + path.sep;
+  if (fullPath !== PAGES_DIR && !fullPath.startsWith(rootWithSep)) {
+    throw new Error('不正なパスが指定されました（pages フォルダ外へのアクセスは禁止されています）');
+  }
+  return { fullPath, relPath: cleanRel };
+}
+
+function validateEntryName(name) {
+  const trimmed = String(name || '').trim();
+  if (!trimmed) return '名前を入力してください';
+  if (trimmed === '.' || trimmed === '..') return 'その名前は使用できません';
+  if (/[\/\\:*?"<>|\0]/.test(trimmed)) return '名前に使用できない文字（/ \\ : * ? " < > |）が含まれています';
+  return null;
+}
+
+function getMimeType(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  return MIME_TYPES[ext] || 'application/octet-stream';
+}
+
+function collectAllFolders(dirFullPath = PAGES_DIR, relPrefix = '') {
+  ensurePagesDir();
+  const result = [''];
+  function walk(currentFull, currentRel) {
+    const items = fs.readdirSync(currentFull, { withFileTypes: true });
+    items.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+    for (const item of items) {
+      if (item.isDirectory()) {
+        const nextRel = currentRel ? `${currentRel}/${item.name}` : item.name;
+        result.push(nextRel);
+        walk(path.join(currentFull, item.name), nextRel);
+      }
+    }
+  }
+  walk(dirFullPath, relPrefix);
+  return result;
+}
+
+function encodePublicPagesPath(relPath) {
+  return relPath
+    .split('/')
+    .filter(Boolean)
+    .map((seg) => encodeURIComponent(seg))
+    .join('/');
+}
+
+function listPagesDirectory(relDir) {
+  const { fullPath, relPath } = resolveSafePagesPath(relDir);
+  if (!fs.existsSync(fullPath) || !fs.statSync(fullPath).isDirectory()) {
+    throw new Error(`フォルダが見つかりません: /pages/${relPath}`);
+  }
+
+  const rawItems = fs.readdirSync(fullPath, { withFileTypes: true });
+  const entries = rawItems.map((dirent) => {
+    const itemFull = path.join(fullPath, dirent.name);
+    const stat = fs.statSync(itemFull);
+    const itemRel = relPath ? `${relPath}/${dirent.name}` : dirent.name;
+    const isDir = dirent.isDirectory();
+    const ext = isDir ? '' : path.extname(dirent.name).toLowerCase();
+    const encoded = encodePublicPagesPath(itemRel);
+    return {
+      name: dirent.name,
+      relPath: itemRel,
+      isDir,
+      ext,
+      isText: !isDir && TEXT_EXTENSIONS.has(ext),
+      isImage: !isDir && IMAGE_EXTENSIONS.has(ext),
+      size: isDir ? 0 : stat.size,
+      mtime: stat.mtime.toISOString(),
+      publicUrl: `${SITE_ORIGIN}/pages/${encoded}${isDir ? '/' : ''}`,
+      previewUrl: `/preview/pages/${encoded}`,
+    };
+  });
+
+  // フォルダ優先、次に名前順
+  entries.sort((a, b) => {
+    if (a.isDir !== b.isDir) return a.isDir ? -1 : 1;
+    return a.name.localeCompare(b.name, 'ja');
+  });
+
+  return {
+    dir: relPath,
+    entries,
+    allFolders: collectAllFolders(),
+  };
+}
 
 function runGit(args) {
   return new Promise((resolve) => {
@@ -139,8 +275,8 @@ function parseJsonBody(req) {
     let data = '';
     req.on('data', (chunk) => {
       data += chunk;
-      if (data.length > 1024 * 1024) {
-        reject(new Error('Request body too large'));
+      if (data.length > MAX_BODY_BYTES) {
+        reject(new Error('Request body too large (max 25MB)'));
       }
     });
     req.on('end', () => {
@@ -375,6 +511,163 @@ async function handleApi(req, res, pathname) {
       return sendJson(res, 200, { ok: true, links: next });
     }
 
+    // ---- Pages Explorer APIs (src/pages 管理) ----
+    if (pathname === '/api/pages/list' && req.method === 'GET') {
+      const urlObj = new URL(req.url, `http://${req.headers.host || '127.0.0.1'}`);
+      const relDir = urlObj.searchParams.get('dir') || '';
+      const data = listPagesDirectory(relDir);
+      return sendJson(res, 200, { ok: true, ...data });
+    }
+
+    if (pathname === '/api/pages/file' && req.method === 'GET') {
+      const urlObj = new URL(req.url, `http://${req.headers.host || '127.0.0.1'}`);
+      const relFile = urlObj.searchParams.get('path') || '';
+      const { fullPath, relPath } = resolveSafePagesPath(relFile);
+      if (!relPath || !fs.existsSync(fullPath) || fs.statSync(fullPath).isDirectory()) {
+        return sendJson(res, 404, { error: 'ファイルが見つかりません' });
+      }
+      const stat = fs.statSync(fullPath);
+      const ext = path.extname(fullPath).toLowerCase();
+      const isText = TEXT_EXTENSIONS.has(ext);
+      const isImage = IMAGE_EXTENSIONS.has(ext);
+      const encoded = encodePublicPagesPath(relPath);
+      return sendJson(res, 200, {
+        ok: true,
+        relPath,
+        name: path.basename(fullPath),
+        ext,
+        size: stat.size,
+        mtime: stat.mtime.toISOString(),
+        isText,
+        isImage,
+        content: isText ? fs.readFileSync(fullPath, 'utf8') : null,
+        publicUrl: `${SITE_ORIGIN}/pages/${encoded}`,
+        previewUrl: `/preview/pages/${encoded}`,
+      });
+    }
+
+    if (pathname === '/api/pages/file' && req.method === 'PUT') {
+      const body = await parseJsonBody(req);
+      const relFile = String(body.path || '').trim();
+      const content = typeof body.content === 'string' ? body.content : '';
+      const { fullPath, relPath } = resolveSafePagesPath(relFile);
+      if (!relPath) return sendJson(res, 400, { error: 'ファイルパスを指定してください' });
+      const nameErr = validateEntryName(path.basename(relPath));
+      if (nameErr) return sendJson(res, 400, { error: nameErr });
+
+      fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+      fs.writeFileSync(fullPath, content, 'utf8');
+      const dirRel = path.posix.dirname(relPath) === '.' ? '' : path.posix.dirname(relPath);
+      return sendJson(res, 200, {
+        ok: true,
+        relPath,
+        listing: listPagesDirectory(dirRel),
+      });
+    }
+
+    if (pathname === '/api/pages/folder' && req.method === 'POST') {
+      const body = await parseJsonBody(req);
+      const dir = normalizeRelPath(body.dir || '');
+      const name = String(body.name || '').trim();
+      const nameErr = validateEntryName(name);
+      if (nameErr) return sendJson(res, 400, { error: nameErr });
+
+      const targetRel = dir ? `${dir}/${name}` : name;
+      const { fullPath } = resolveSafePagesPath(targetRel);
+      if (fs.existsSync(fullPath)) {
+        return sendJson(res, 409, { error: `"${name}" は既に存在します` });
+      }
+      fs.mkdirSync(fullPath, { recursive: true });
+      return sendJson(res, 201, {
+        ok: true,
+        relPath: targetRel,
+        listing: listPagesDirectory(dir),
+      });
+    }
+
+    if (pathname === '/api/pages/upload' && req.method === 'POST') {
+      const body = await parseJsonBody(req);
+      const dir = normalizeRelPath(body.dir || '');
+      const filename = String(body.filename || '').trim();
+      const dataBase64 = String(body.dataBase64 || '');
+      const nameErr = validateEntryName(filename);
+      if (nameErr) return sendJson(res, 400, { error: nameErr });
+      if (!dataBase64) return sendJson(res, 400, { error: 'ファイルデータが空です' });
+
+      const targetRel = dir ? `${dir}/${filename}` : filename;
+      const { fullPath } = resolveSafePagesPath(targetRel);
+      const buffer = Buffer.from(dataBase64, 'base64');
+      fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+      fs.writeFileSync(fullPath, buffer);
+      return sendJson(res, 201, {
+        ok: true,
+        relPath: targetRel,
+        size: buffer.length,
+        listing: listPagesDirectory(dir),
+      });
+    }
+
+    if (pathname === '/api/pages/rename' && req.method === 'POST') {
+      const body = await parseJsonBody(req);
+      const fromRel = normalizeRelPath(body.from || '');
+      const toRel = normalizeRelPath(body.to || '');
+      if (!fromRel || !toRel) {
+        return sendJson(res, 400, { error: '移動元と移動先のパスを指定してください' });
+      }
+      const nameErr = validateEntryName(path.posix.basename(toRel));
+      if (nameErr) return sendJson(res, 400, { error: nameErr });
+
+      const src = resolveSafePagesPath(fromRel);
+      const dst = resolveSafePagesPath(toRel);
+      if (!fs.existsSync(src.fullPath)) {
+        return sendJson(res, 404, { error: '対象のファイルまたはフォルダが見つかりません' });
+      }
+      if (src.fullPath === PAGES_DIR) {
+        return sendJson(res, 400, { error: 'pages ルートフォルダは変更できません' });
+      }
+      if (src.fullPath === dst.fullPath) {
+        return sendJson(res, 200, { ok: true, relPath: dst.relPath });
+      }
+      if (dst.fullPath.startsWith(src.fullPath + path.sep)) {
+        return sendJson(res, 400, { error: 'フォルダを自分自身の配下へ移動することはできません' });
+      }
+      if (fs.existsSync(dst.fullPath)) {
+        return sendJson(res, 409, { error: `移動先 "${dst.relPath}" は既に存在します` });
+      }
+
+      fs.mkdirSync(path.dirname(dst.fullPath), { recursive: true });
+      fs.renameSync(src.fullPath, dst.fullPath);
+      const parentDir = path.posix.dirname(dst.relPath) === '.' ? '' : path.posix.dirname(dst.relPath);
+      return sendJson(res, 200, {
+        ok: true,
+        from: src.relPath,
+        to: dst.relPath,
+        listing: listPagesDirectory(parentDir),
+      });
+    }
+
+    if (pathname === '/api/pages/entry' && req.method === 'DELETE') {
+      const urlObj = new URL(req.url, `http://${req.headers.host || '127.0.0.1'}`);
+      const relTarget = normalizeRelPath(urlObj.searchParams.get('path') || '');
+      if (!relTarget) {
+        return sendJson(res, 400, { error: '削除対象を指定してください' });
+      }
+      const target = resolveSafePagesPath(relTarget);
+      if (target.fullPath === PAGES_DIR) {
+        return sendJson(res, 400, { error: 'pages ルートフォルダは削除できません' });
+      }
+      if (!fs.existsSync(target.fullPath)) {
+        return sendJson(res, 404, { error: '削除対象が見つかりません' });
+      }
+      fs.rmSync(target.fullPath, { recursive: true, force: true });
+      const parentDir = path.posix.dirname(relTarget) === '.' ? '' : path.posix.dirname(relTarget);
+      return sendJson(res, 200, {
+        ok: true,
+        deleted: relTarget,
+        listing: listPagesDirectory(parentDir),
+      });
+    }
+
     if (pathname === '/api/build' && req.method === 'POST') {
       const result = build({ silent: true });
       return sendJson(res, 200, { ok: true, result });
@@ -398,10 +691,10 @@ async function handleApi(req, res, pathname) {
     if (pathname === '/api/git/commit' && req.method === 'POST') {
       const body = await parseJsonBody(req);
       const stageAll = Boolean(body.stageAll);
-      const message = String(body.message || '').trim() || 'Update shortcuts in links.json';
+      const message = String(body.message || '').trim() || 'Update shortcuts and pages';
       const steps = [];
 
-      const addArgs = stageAll ? ['add', '-A'] : ['add', 'links.json'];
+      const addArgs = stageAll ? ['add', '-A'] : ['add', '--', 'links.json', 'src/pages'];
       const addRes = await runGit(addArgs);
       steps.push(addRes);
       if (!addRes.ok) {
@@ -440,11 +733,11 @@ async function handleApi(req, res, pathname) {
     if (pathname === '/api/git/sync' && req.method === 'POST') {
       const body = await parseJsonBody(req);
       const stageAll = Boolean(body.stageAll);
-      const message = String(body.message || '').trim() || 'Update shortcuts in links.json';
+      const message = String(body.message || '').trim() || 'Update shortcuts and pages';
       const steps = [];
 
-      // 1. 変更があればステージ & コミット
-      const addArgs = stageAll ? ['add', '-A'] : ['add', 'links.json'];
+      // 1. 変更があればステージ & コミット（links.json と src/pages を対象）
+      const addArgs = stageAll ? ['add', '-A'] : ['add', '--', 'links.json', 'src/pages'];
       const addRes = await runGit(addArgs);
       steps.push(addRes);
       if (!addRes.ok) {
@@ -511,6 +804,41 @@ const server = http.createServer((req, res) => {
       'Cache-Control': 'no-store',
     });
     res.end(html);
+    return;
+  }
+
+  if (pathname === '/assets/editor.js' && req.method === 'GET') {
+    const js = fs.readFileSync(EDITOR_JS_PATH, 'utf8');
+    res.writeHead(200, {
+      'Content-Type': 'application/javascript; charset=utf-8',
+      'Cache-Control': 'no-store',
+    });
+    res.end(js);
+    return;
+  }
+
+  if (pathname.startsWith('/preview/pages/') && req.method === 'GET') {
+    try {
+      const rawRel = decodeURIComponent(pathname.slice('/preview/pages/'.length));
+      const { fullPath } = resolveSafePagesPath(rawRel);
+      let target = fullPath;
+      if (fs.existsSync(target) && fs.statSync(target).isDirectory()) {
+        target = path.join(target, 'index.html');
+      }
+      if (!fs.existsSync(target) || fs.statSync(target).isDirectory()) {
+        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end('Preview target not found');
+        return;
+      }
+      res.writeHead(200, {
+        'Content-Type': getMimeType(target),
+        'Cache-Control': 'no-store',
+      });
+      fs.createReadStream(target).pipe(res);
+    } catch (err) {
+      res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end(err.message);
+    }
     return;
   }
 

@@ -35,9 +35,11 @@ npm run build
 
 ### 主な機能
 
-- **ショートカットの追加・編集・削除**: スラッグ重複チェック、URL 検証、トップページ掲載の公開/非公開トグル
+- **ショートカットの追加・編集・削除**: スラッグ重複チェック、指定桁数のランダム英数字スラッグ自動生成、URL 検証、トップページ掲載の公開/非公開トグル
+- **Pages エクスプローラー (`src/pages`)**: HTML・画像・サンプルファイルの追加／ドラッグ＆ドロップアップロード／名前変更／移動／削除、フォルダ作成・移動・削除、ローカルリアルタイムプレビュー
+- **内蔵コードエディタ（依存ゼロ）**: HTML / CSS / JS / JSON のシンタックスハイライト、インデント空白・タブの色分け（Indent Rainbow）、リアルタイム構文チェック（閉じタグ忘れ・括弧抜け・JS/CSS 構文エラー・重複 ID 検出）
 - **ビルドテスト**: ローカルで `build.js` を実行して生成結果を確認
 - **Git Sync & Deploy（ワンクリック反映）**:
-  - **Sync & Deploy**: `git add` → `git commit` → `git pull --rebase` → `git push` を一括実行し、GitHub Actions 経由で `s.qch.jp` へ反映
+  - **Sync & Deploy**: `links.json` と `src/pages` の変更を `git add` → `git commit` → `git pull --rebase` → `git push` で一括反映
   - **個別操作**: `Pull` / `Commit` / `Push` / `links.json 変更破棄`
   - **確認機能**: `links.json` の Diff 表示、実行ログコンソール、最近のコミット履歴表示
