@@ -629,6 +629,20 @@
                     <div class="field">
                         <label for="fieldSlug">スラッグ（パス）※必須</label>
                         <input id="fieldSlug" class="input" type="text" required placeholder="例: ck">
+                        <div class="row" style="margin-top:4px; padding:7px 9px; background:#f2ede0; border:1px solid #cbc2ae;">
+                            <span style="font-size:12px; font-weight:bold; color:#3d372d;">ランダム生成：</span>
+                            <label style="display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:normal;">
+                                桁数
+                                <input id="randomLength" class="input" type="number" min="1" max="32" value="6" style="width:62px; min-width:62px; flex:none; padding:3px 6px; font-size:12.5px;">
+                            </label>
+                            <select id="randomCharset" class="input" style="flex:1; min-width:130px; padding:4px 6px; font-size:12px;">
+                                <option value="alnum_lower">英小文字 + 数字</option>
+                                <option value="alnum_safe">紛らわしい文字除外</option>
+                                <option value="alnum_mixed">英大小文字 + 数字</option>
+                            </select>
+                            <button type="button" id="btnGenSlug" class="btn-sm">ランダム生成</button>
+                        </div>
+                        <div id="slugGenStatus" class="subtext" style="display:none;"></div>
                         <div id="slugPreview" class="preview-url">https://__SITE_DOMAIN__/</div>
                     </div>
                     <div class="field">
@@ -842,6 +856,7 @@
             $('fieldTitle').value = item ? item.title : '';
             $('fieldDesc').value = item ? item.description : '';
             $('fieldPublic').checked = item ? Boolean(item.public) : true;
+            $('slugGenStatus').style.display = 'none';
             updateSlugPreview();
             $('linkModal').classList.add('open');
             $('fieldSlug').focus();
@@ -885,8 +900,35 @@
         $('btnOpenAdd').addEventListener('click', () => openModal('add'));
         $('btnCloseModal').addEventListener('click', closeModal);
         $('btnCancelModal').addEventListener('click', closeModal);
-        $('fieldSlug').addEventListener('input', updateSlugPreview);
+        $('fieldSlug').addEventListener('input', () => {
+            updateSlugPreview();
+            $('slugGenStatus').style.display = 'none';
+        });
         $('searchInput').addEventListener('input', renderLinks);
+
+        $('btnGenSlug').addEventListener('click', async () => {
+            const length = parseInt($('randomLength').value, 10);
+            const charset = $('randomCharset').value;
+            if (!Number.isInteger(length) || length < 1 || length > 32) {
+                showToast('桁数は 1〜32 の整数で指定してください', true);
+                return;
+            }
+            const btn = $('btnGenSlug');
+            btn.disabled = true;
+            try {
+                const res = await api(`/api/links/generate-slug?length=${length}&charset=${encodeURIComponent(charset)}`);
+                $('fieldSlug').value = res.slug;
+                updateSlugPreview();
+                const statusEl = $('slugGenStatus');
+                statusEl.textContent = `✓ 重複チェック済み（${res.attempts}回で一意な ${res.length}桁スラッグを生成）`;
+                statusEl.style.display = 'block';
+                showToast(`ランダムスラッグ /${res.slug} を生成しました`);
+            } catch (err) {
+                showToast(err.message, true);
+            } finally {
+                btn.disabled = false;
+            }
+        });
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && $('linkModal').classList.contains('open')) {

@@ -184,6 +184,104 @@ function openBrowser(url) {
   }
 }
 
+const SLUG_CHARSETS = {
+  alnum_lower: 'abcdefghijklmnopqrstuvwxyz0123456789',
+  alnum_safe: 'abcdefghjkmnpqrstuvwxyz23456789',
+  alnum_mixed: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+};
+
+function randomStringFromAlphabet(length, alphabet) {
+  const len = alphabet.length;
+  // 剰余バイアスを除去するための閾値
+  const maxValidByte = Math.floor(256 / len) * len;
+  let result = '';
+  while (result.length < length) {
+    const needed = length - result.length;
+    const buf = crypto.randomBytes(Math.max(needed * 2, 16));
+    for (let i = 0; i < buf.length && result.length < length; i += 1) {
+      if (buf[i] < maxValidByte) {
+        result += alphabet[buf[i] % len];
+      }
+    }
+  }
+  return result;
+}
+
+function indexToSlug(index, length, alphabet) {
+  const base = alphabet.length;
+  const chars = new Array(length);
+  let n = index;
+  for (let i = length - 1; i >= 0; i -= 1) {
+    chars[i] = alphabet[n % base];
+    n = Math.floor(n / base);
+  }
+  return chars.join('');
+}
+
+function generateUniqueSlug(length, charsetKey, entries) {
+  const alphabet = SLUG_CHARSETS[charsetKey] || SLUG_CHARSETS.alnum_lower;
+  const resolvedCharset = SLUG_CHARSETS[charsetKey] ? charsetKey : 'alnum_lower';
+
+  if (!Number.isInteger(length) || length < 1 || length > 32) {
+    throw new Error('桁数は 1〜32 の整数で指定してください');
+  }
+
+  // O(1) で重複判定できるよう小文字正規化した Set を構築（大文字小文字を区別しないFSでの衝突も防止）
+  const usedLower = new Set();
+  for (const r of RESERVED_SLUGS) usedLower.add(r.toLowerCase());
+  for (const e of entries) usedLower.add(e.slug.toLowerCase());
+
+  const totalSpace = Math.pow(alphabet.length, length);
+
+  // 候補空間が小さい場合（1〜2桁など）は占有率を見て無駄なリトライを回避
+  if (totalSpace <= 10000) {
+    const lowerAlphabetSet = new Set(alphabet.toLowerCase().split(''));
+    let occupiedInSpace = 0;
+    for (const s of usedLower) {
+      if (s.length === length && [...s].every((ch) => lowerAlphabetSet.has(ch))) {
+        occupiedInSpace += 1;
+      }
+    }
+    if (occupiedInSpace >= totalSpace) {
+      throw new Error(`${length}桁の組み合わせはすべて使用済みです。桁数を増やしてください。`);
+    }
+    // 占有率が50%以上の場合は、ランダム開始位置からの線形プローブに切替（無限リトライ防止）
+    if (occupiedInSpace * 2 >= totalSpace) {
+      const start = crypto.randomInt(0, totalSpace);
+      for (let offset = 0; offset < totalSpace; offset += 1) {
+        const candidate = indexToSlug((start + offset) % totalSpace, length, alphabet);
+        if (!usedLower.has(candidate.toLowerCase())) {
+          return {
+            slug: candidate,
+            length,
+            charset: resolvedCharset,
+            attempts: offset + 1,
+            strategy: 'linear-probe',
+          };
+        }
+      }
+      throw new Error(`${length}桁の空きスラッグが見つかりませんでした。桁数を増やしてください。`);
+    }
+  }
+
+  // 通常ケース：O(1) Set判定による高速ランダムサンプリング（ほぼ1回でヒット）
+  const maxAttempts = 32;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const candidate = randomStringFromAlphabet(length, alphabet);
+    if (!usedLower.has(candidate.toLowerCase())) {
+      return {
+        slug: candidate,
+        length,
+        charset: resolvedCharset,
+        attempts: attempt,
+        strategy: 'random-sample',
+      };
+    }
+  }
+
+  throw new Error('一意なスラッグの生成に失敗しました。桁数を増やして再試行してください。');
+}
+
 async function handleApi(req, res, pathname) {
   if (req.method !== 'GET' && !verifyToken(req)) {
     return sendJson(res, 403, { error: 'Invalid session token' });
@@ -197,6 +295,19 @@ async function handleApi(req, res, pathname) {
         origin: SITE_ORIGIN,
         links: entries,
       });
+    }
+
+    if (pathname === '/api/links/generate-slug' && req.method === 'GET') {
+      const urlObj = new URL(req.url, `http://${req.headers.host || '127.0.0.1'}`);
+      const lengthParam = Number(urlObj.searchParams.get('length') || '6');
+      const charsetParam = String(urlObj.searchParams.get('charset') || 'alnum_lower');
+      const entries = normalizeLinks(readRawLinks());
+      try {
+        const generated = generateUniqueSlug(lengthParam, charsetParam, entries);
+        return sendJson(res, 200, { ok: true, ...generated });
+      } catch (err) {
+        return sendJson(res, 400, { error: err.message });
+      }
     }
 
     if (pathname === '/api/links' && req.method === 'POST') {
