@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>__SITE_DOMAIN__ Manager | MotoYucchi Local Admin</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+            --bg: #f1f5f9;
+            --surface: #ffffff;
+            --surface-2: #f8fafc;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-sub: #64748b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-soft: rgba(37, 99, 235, 0.1);
+            --green: #16a34a;
+            --green-soft: rgba(22, 163, 74, 0.12);
+            --amber: #d97706;
+            --amber-soft: rgba(217, 119, 6, 0.14);
+            --red: #dc2626;
+            --red-soft: rgba(220, 38, 38, 0.12);
+            --shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0b1120;
+                --surface: #111827;
+                --surface-2: #0f172a;
+                --border: #1e293b;
+                --text: #f8fafc;
+                --text-sub: #94a3b8;
+                --accent: #3b82f6;
+                --accent-hover: #2563eb;
+                --accent-soft: rgba(59, 130, 246, 0.16);
+                --green: #22c55e;
+                --green-soft: rgba(34, 197, 94, 0.16);
+                --amber: #f59e0b;
+                --amber-soft: rgba(245, 158, 11, 0.18);
+                --red: #ef4444;
+                --red-soft: rgba(239, 68, 68, 0.16);
+                --shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: 48px;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: color-mix(in srgb, var(--surface) 88%, transparent);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topbar-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2563eb, #0ea5e9);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+
+        .brand h1 {
+            font-size: 17px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 600;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+
+        .badge-blue { background: var(--accent-soft); color: var(--accent); }
+        .badge-green { background: var(--green-soft); color: var(--green); }
+        .badge-amber { background: var(--amber-soft); color: var(--amber); }
+        .badge-red { background: var(--red-soft); color: var(--red); }
+        .badge-gray { background: var(--surface-2); color: var(--text-sub); border: 1px solid var(--border); }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .main {
+            max-width: 1120px;
+            margin: 22px auto 0;
+            padding: 0 20px;
+            display: grid;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 18px 20px;
+        }
+
+        button, .btn-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+        }
+
+        button:hover:not(:disabled), .btn-link:hover {
+            background: var(--surface-2);
+            border-color: var(--accent);
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .btn-success {
+            background: var(--green);
+            border-color: var(--green);
+            color: #ffffff;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            filter: brightness(0.92);
+            border-color: var(--green);
+        }
+
+        .btn-danger {
+            color: var(--red);
+            border-color: color-mix(in srgb, var(--red) 35%, var(--border));
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: var(--red-soft);
+            border-color: var(--red);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .git-controls {
+            display: grid;
+            gap: 12px;
+        }
+
+        .git-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .input {
+            flex: 1;
+            min-width: 220px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+            color: var(--text);
+            font-size: 13.5px;
+            outline: none;
+        }
+
+        .input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin-top: 14px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            border: none;
+            background: transparent;
+            color: var(--text-sub);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .console {
+            margin-top: 10px;
+            background: #0b1120;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 12px;
+            max-height: 220px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .commit-list {
+            margin-top: 10px;
+            display: grid;
+            gap: 6px;
+            max-height: 220px;
+            overflow: auto;
+        }
+
+        .commit-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            font-size: 12.5px;
+        }
+
+        .commit-hash {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            color: var(--accent);
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .commit-meta {
+            color: var(--text-sub);
+            font-size: 11.5px;
+            flex-shrink: 0;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 11px 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        th {
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-sub);
+            font-weight: 700;
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        .slug-cell {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-weight: 700;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .url-cell {
+            max-width: 340px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .url-cell a {
+            color: var(--text-sub);
+            text-decoration: none;
+        }
+
+        .url-cell a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .subtext {
+            font-size: 11.5px;
+            color: var(--text-sub);
+        }
+
+        .actions-cell {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: flex-end;
+            white-space: nowrap;
+        }
+
+        .toggle-btn {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            display: none;
+            place-items: center;
+            padding: 18px;
+            z-index: 50;
+        }
+
+        .modal-backdrop.open { display: grid; }
+
+        .modal {
+            width: 100%;
+            max-width: 500px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-body {
+            padding: 18px 20px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .field {
+            display: grid;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 12.5px;
+            font-weight: 600;
+        }
+
+        .preview-url {
+            font-size: 12px;
+            color: var(--accent);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(12px);
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 100;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.error { background: var(--red); }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand">
+                <div class="brand-mark">s/</div>
+                <div>
+                    <h1>
+                        __SITE_DOMAIN__ Manager
+                        <span class="badge badge-blue">MotoYucchi Admin</span>
+                    </h1>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <span id="branchBadge" class="badge badge-gray">branch: ...</span>
+                <span id="syncBadge" class="badge badge-gray">確認中...</span>
+                <a class="btn-link btn-sm" href="https://__SITE_DOMAIN__" target="_blank" rel="noopener">s.qch.jp を開く ↗</a>
+                <a id="actionsLink" class="btn-link btn-sm" href="https://github.com/MotoYucchi/s.qch.jp-Shortcut-Redirector/actions" target="_blank" rel="noopener">GitHub Actions ↗</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Git Sync & Deploy パネル -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span>Git Sync &amp; Deploy</span>
+                    <span id="dirtyFilesBadge" class="badge badge-gray" style="display:none;"></span>
+                </div>
+                <div class="git-row">
+                    <button type="button" id="btnRefresh" class="btn-sm">状態更新</button>
+                    <button type="button" id="btnBuildTest" class="btn-sm">ビルドテスト</button>
+                    <button type="button" id="btnDiscard" class="btn-sm btn-danger" style="display:none;">links.json 変更破棄</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="git-controls">
+                    <div class="git-row">
+                        <input id="commitMessage" class="input" type="text" placeholder="コミットメッセージ（空欄で自動入力: Update shortcuts in links.json）">
+                        <label class="checkbox-row" style="font-size:12.5px; color:var(--text-sub);">
+                            <input type="checkbox" id="stageAllCheck">
+                            全変更を含める (git add -A)
+                        </label>
+                    </div>
+                    <div class="git-row">
+                        <button type="button" id="btnSync" class="btn-success">🚀 Sync &amp; Deploy (Commit → Pull → Push)</button>
+                        <button type="button" id="btnPull">↓ Pull</button>
+                        <button type="button" id="btnCommit">✓ Commit</button>
+                        <button type="button" id="btnPush">↑ Push</button>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button type="button" class="tab-btn active" data-tab="log">実行ログ</button>
+                    <button type="button" class="tab-btn" data-tab="diff">links.json Diff</button>
+                    <button type="button" class="tab-btn" data-tab="commits">最近のコミット</button>
+                </div>
+
+                <div id="tab-log">
+                    <pre id="consoleOutput" class="console">準備完了。ショートカットを編集後、「Sync &amp; Deploy」で GitHub Pages へ反映できます。</pre>
+                </div>
+                <div id="tab-diff" style="display:none;">
+                    <pre id="diffOutput" class="console">未コミットの差分はありません。</pre>
+                </div>
+                <div id="tab-commits" style="display:none;">
+                    <div id="commitList" class="commit-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ショートカット一覧パネル -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span>ショートカット一覧</span>
+                    <span id="countBadge" class="badge badge-blue">0件</span>
+                </div>
+                <button type="button" id="btnOpenAdd" class="btn-primary">+ 新規ショートカット追加</button>
+            </div>
+            <div class="card-body">
+                <div class="toolbar">
+                    <input id="searchInput" class="input" type="search" placeholder="スラッグ・タイトル・URLで検索...">
+                    <div class="filter-group">
+                        <button type="button" class="btn-sm filter-btn btn-primary" data-filter="all">すべて</button>
+                        <button type="button" class="btn-sm filter-btn" data-filter="public">公開</button>
+                        <button type="button" class="btn-sm filter-btn" data-filter="private">非公開</button>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ショートカット</th>
+                                <th>タイトル / 説明</th>
+                                <th>遷移先 URL</th>
+                                <th>トップ掲載</th>
+                                <th style="text-align:right;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="linksTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 追加・編集モーダル -->
+    <div id="linkModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle" style="font-size:16px;">ショートカットを追加</h2>
+                <button type="button" id="btnCloseModal" class="btn-sm">✕</button>
+            </div>
+            <form id="linkForm">
+                <div class="modal-body">
+                    <input type="hidden" id="fieldOriginalSlug">
+                    <div class="field">
+                        <label for="fieldSlug">スラッグ（パス） *</label>
+                        <input id="fieldSlug" class="input" type="text" required placeholder="例: ck">
+                        <div id="slugPreview" class="preview-url">https://__SITE_DOMAIN__/</div>
+                    </div>
+                    <div class="field">
+                        <label for="fieldUrl">遷移先 URL *</label>
+                        <input id="fieldUrl" class="input" type="url" required placeholder="https://clipkit.qch.jp">
+                    </div>
+                    <div class="field">
+                        <label for="fieldTitle">タイトル（任意）</label>
+                        <input id="fieldTitle" class="input" type="text" placeholder="例: ClipKit">
+                    </div>
+                    <div class="field">
+                        <label for="fieldDesc">説明（任意）</label>
+                        <input id="fieldDesc" class="input" type="text" placeholder="例: clipkit.qch.jp">
+                    </div>
+                    <label class="checkbox-row">
+                        <input type="checkbox" id="fieldPublic" checked>
+                        <span>トップページ (s.qch.jp) の一覧に表示する</span>
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCancelModal">キャンセル</button>
+                    <button type="submit" id="btnSaveLink" class="btn-primary">保存する</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script>
+        const TOKEN = '__MANAGER_TOKEN__';
+        const SITE_DOMAIN = '__SITE_DOMAIN__';
+
+        let allLinks = [];
+        let currentFilter = 'all';
+        let modalMode = 'add';
+        let toastTimer = null;
+
+        const $ = (id) => document.getElementById(id);
+
+        function showToast(message, isError = false) {
+            const el = $('toast');
+            el.textContent = message;
+            el.classList.toggle('error', isError);
+            el.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+        }
+
+        function appendLog(text) {
+            const box = $('consoleOutput');
+            const now = new Date().toLocaleTimeString('ja-JP');
+            box.textContent = `[${now}] ${text}\n\n${box.textContent}`.slice(0, 12000);
+        }
+
+        async function api(path, method = 'GET', body = null) {
+            const opts = {
+                method,
+                headers: {
+                    'X-Manager-Token': TOKEN,
+                },
+            };
+            if (body !== null) {
+                opts.headers['Content-Type'] = 'application/json';
+                opts.body = JSON.stringify(body);
+            }
+            const res = await fetch(path, opts);
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                const err = new Error(data.error || `HTTP ${res.status}`);
+                err.data = data;
+                throw err;
+            }
+            return data;
+        }
+
+        function formatSteps(steps) {
+            if (!Array.isArray(steps) || steps.length === 0) return '';
+            return steps
+                .map((s) => {
+                    const out = [s.stdout, s.stderr].filter(Boolean).join('\n');
+                    return `$ ${s.command}${out ? '\n' + out : '\n(ok)'}`;
+                })
+                .join('\n\n');
+        }
+
+        function renderLinks() {
+            const query = $('searchInput').value.trim().toLowerCase();
+            const filtered = allLinks.filter((item) => {
+                if (currentFilter === 'public' && !item.public) return false;
+                if (currentFilter === 'private' && item.public) return false;
+                if (!query) return true;
+                return `${item.slug} ${item.title} ${item.description} ${item.url}`
+                    .toLowerCase()
+                    .includes(query);
+            });
+
+            const publicCount = allLinks.filter((i) => i.public).length;
+            $('countBadge').textContent = `全 ${allLinks.length} 件（公開 ${publicCount}）`;
+
+            const tbody = $('linksTableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:28px; color:var(--text-sub);">該当するショートカットがありません</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered
+                .map((item) => {
+                    const shortUrl = `https://${SITE_DOMAIN}/${item.slug}`;
+                    const pubBadge = item.public
+                        ? `<button type="button" class="toggle-btn badge-green" data-action="toggle" data-slug="${escapeAttr(item.slug)}">公開</button>`
+                        : `<button type="button" class="toggle-btn badge-gray" data-action="toggle" data-slug="${escapeAttr(item.slug)}">非公開</button>`;
+
+                    return `
+                        <tr>
+                            <td class="slug-cell">/${escapeHtml(item.slug)}</td>
+                            <td>
+                                <div style="font-weight:600;">${escapeHtml(item.title)}</div>
+                                ${item.description ? `<div class="subtext">${escapeHtml(item.description)}</div>` : ''}
+                            </td>
+                            <td class="url-cell">
+                                <a href="${escapeAttr(item.url)}" target="_blank" rel="noopener" title="${escapeAttr(item.url)}">${escapeHtml(item.url)}</a>
+                            </td>
+                            <td>${pubBadge}</td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button type="button" class="btn-sm" data-action="copy" data-url="${escapeAttr(shortUrl)}">コピー</button>
+                                    <button type="button" class="btn-sm" data-action="edit" data-slug="${escapeAttr(item.slug)}">編集</button>
+                                    <button type="button" class="btn-sm btn-danger" data-action="delete" data-slug="${escapeAttr(item.slug)}">削除</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                })
+                .join('');
+        }
+
+        function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function escapeAttr(s) {
+            return escapeHtml(s).replace(/'/g, '&#39;');
+        }
+
+        function renderGitStatus(status) {
+            $('branchBadge').textContent = `branch: ${status.branch}`;
+            if (status.actionsUrl) {
+                $('actionsLink').href = status.actionsUrl;
+            }
+
+            const syncBadge = $('syncBadge');
+            syncBadge.className = 'badge';
+            if (status.dirty) {
+                syncBadge.classList.add('badge-amber');
+                syncBadge.textContent = `未コミット変更あり (${status.files.length})`;
+            } else if (status.ahead > 0 || status.behind > 0) {
+                syncBadge.classList.add('badge-blue');
+                syncBadge.textContent = `ahead ${status.ahead} / behind ${status.behind}`;
+            } else {
+                syncBadge.classList.add('badge-green');
+                syncBadge.textContent = 'Synced';
+            }
+
+            const dirtyBadge = $('dirtyFilesBadge');
+            if (status.files.length > 0) {
+                dirtyBadge.style.display = 'inline-flex';
+                dirtyBadge.className = 'badge badge-amber';
+                dirtyBadge.textContent = status.files.map((f) => `${f.status} ${f.file}`).join(', ');
+            } else {
+                dirtyBadge.style.display = 'none';
+            }
+
+            $('btnDiscard').style.display = status.linksDirty ? 'inline-flex' : 'none';
+            $('diffOutput').textContent = status.diff || '未コミットの差分はありません。';
+
+            $('commitList').innerHTML = (status.commits || [])
+                .map(
+                    (c) => `
+                    <div class="commit-item">
+                        <div>
+                            <span class="commit-hash">${escapeHtml(c.hash)}</span>
+                            <span>${escapeHtml(c.subject)}</span>
+                        </div>
+                        <span class="commit-meta">${escapeHtml(c.relativeDate)} · ${escapeHtml(c.author)}</span>
+                    </div>
+                `
+                )
+                .join('');
+        }
+
+        async function loadAll() {
+            const [linksData, gitStatus] = await Promise.all([
+                api('/api/links'),
+                api('/api/git/status'),
+            ]);
+            allLinks = linksData.links || [];
+            renderLinks();
+            renderGitStatus(gitStatus);
+        }
+
+        function openModal(mode, item = null) {
+            modalMode = mode;
+            $('modalTitle').textContent = mode === 'add' ? 'ショートカットを追加' : `ショートカットを編集 (/${item.slug})`;
+            $('fieldOriginalSlug').value = item ? item.slug : '';
+            $('fieldSlug').value = item ? item.slug : '';
+            $('fieldUrl').value = item ? item.url : 'https://';
+            $('fieldTitle').value = item ? item.title : '';
+            $('fieldDesc').value = item ? item.description : '';
+            $('fieldPublic').checked = item ? Boolean(item.public) : true;
+            updateSlugPreview();
+            $('linkModal').classList.add('open');
+            $('fieldSlug').focus();
+        }
+
+        function closeModal() {
+            $('linkModal').classList.remove('open');
+        }
+
+        function updateSlugPreview() {
+            const slug = $('fieldSlug').value.trim();
+            $('slugPreview').textContent = `https://${SITE_DOMAIN}/${slug}`;
+        }
+
+        async function runGitAction(buttonId, label, endpoint, payload = {}) {
+            const btn = $(buttonId);
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = `${label} 実行中...`;
+            try {
+                const res = await api(endpoint, 'POST', payload);
+                if (res.status) renderGitStatus(res.status);
+                if (res.links) {
+                    allLinks = res.links;
+                    renderLinks();
+                }
+                const logText = formatSteps(res.steps) || res.message || `${label} 完了`;
+                appendLog(logText);
+                showToast(`${label} が完了しました`);
+            } catch (err) {
+                const stepsText = err.data && err.data.steps ? formatSteps(err.data.steps) : err.message;
+                if (err.data && err.data.status) renderGitStatus(err.data.status);
+                appendLog(`ERROR (${label}):\n${stepsText}`);
+                showToast(`${label} に失敗しました: ${err.message}`, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        // Event bindings
+        $('btnOpenAdd').addEventListener('click', () => openModal('add'));
+        $('btnCloseModal').addEventListener('click', closeModal);
+        $('btnCancelModal').addEventListener('click', closeModal);
+        $('fieldSlug').addEventListener('input', updateSlugPreview);
+        $('searchInput').addEventListener('input', renderLinks);
+
+        document.querySelectorAll('.filter-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                currentFilter = btn.dataset.filter;
+                document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('btn-primary'));
+                btn.classList.add('btn-primary');
+                renderLinks();
+            });
+        });
+
+        document.querySelectorAll('.tab-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.tab;
+                document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+                btn.classList.add('active');
+                ['log', 'diff', 'commits'].forEach((t) => {
+                    $(`tab-${t}`).style.display = t === target ? 'block' : 'none';
+                });
+            });
+        });
+
+        $('linkForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                originalSlug: $('fieldOriginalSlug').value.trim(),
+                slug: $('fieldSlug').value.trim(),
+                url: $('fieldUrl').value.trim(),
+                title: $('fieldTitle').value.trim(),
+                description: $('fieldDesc').value.trim(),
+                public: $('fieldPublic').checked,
+            };
+
+            try {
+                const method = modalMode === 'add' ? 'POST' : 'PUT';
+                const res = await api('/api/links', method, payload);
+                allLinks = res.links;
+                renderLinks();
+                closeModal();
+                const actionWord = modalMode === 'add' ? 'Add' : 'Update';
+                if (!$('commitMessage').value.trim()) {
+                    $('commitMessage').value = `${actionWord} shortcut /${payload.slug}`;
+                }
+                showToast(`/${payload.slug} を保存しました`);
+                appendLog(`links.json を更新: /${payload.slug} -> ${payload.url}`);
+                const gitStatus = await api('/api/git/status');
+                renderGitStatus(gitStatus);
+            } catch (err) {
+                showToast(err.message, true);
+            }
+        });
+
+        $('linksTableBody').addEventListener('click', async (e) => {
+            const btn = e.target.closest('button[data-action]');
+            if (!btn) return;
+            const action = btn.dataset.action;
+            const slug = btn.dataset.slug;
+
+            if (action === 'copy') {
+                const url = btn.dataset.url;
+                await navigator.clipboard.writeText(url).catch(() => {});
+                showToast(`コピーしました: ${url}`);
+                return;
+            }
+
+            const item = allLinks.find((l) => l.slug === slug);
+            if (!item) return;
+
+            if (action === 'edit') {
+                openModal('edit', item);
+                return;
+            }
+
+            if (action === 'toggle') {
+                try {
+                    const res = await api('/api/links', 'PUT', {
+                        originalSlug: item.slug,
+                        slug: item.slug,
+                        url: item.url,
+                        title: item.title,
+                        description: item.description,
+                        public: !item.public,
+                    });
+                    allLinks = res.links;
+                    renderLinks();
+                    showToast(`/${item.slug} を${!item.public ? '公開' : '非公開'}に変更しました`);
+                    renderGitStatus(await api('/api/git/status'));
+                } catch (err) {
+                    showToast(err.message, true);
+                }
+                return;
+            }
+
+            if (action === 'delete') {
+                if (!confirm(`ショートカット "/${slug}" (${item.url}) を削除しますか？`)) return;
+                try {
+                    const res = await api(`/api/links?slug=${encodeURIComponent(slug)}`, 'DELETE');
+                    allLinks = res.links;
+                    renderLinks();
+                    if (!$('commitMessage').value.trim()) {
+                        $('commitMessage').value = `Remove shortcut /${slug}`;
+                    }
+                    showToast(`/${slug} を削除しました`);
+                    appendLog(`links.json から削除: /${slug}`);
+                    renderGitStatus(await api('/api/git/status'));
+                } catch (err) {
+                    showToast(err.message, true);
+                }
+            }
+        });
+
+        $('btnRefresh').addEventListener('click', async () => {
+            try {
+                await loadAll();
+                showToast('最新状態を取得しました');
+            } catch (err) {
+                showToast(err.message, true);
+            }
+        });
+
+        $('btnBuildTest').addEventListener('click', async () => {
+            try {
+                const res = await api('/api/build', 'POST');
+                const r = res.result;
+                appendLog(`Build Test OK: ${r.generatedCount}/${r.total} links generated (skipped: ${r.skippedCount})`);
+                showToast(`ビルド成功 (${r.generatedCount}件生成)`);
+            } catch (err) {
+                appendLog(`Build Test ERROR: ${err.message}`);
+                showToast(`ビルド失敗: ${err.message}`, true);
+            }
+        });
+
+        $('btnPull').addEventListener('click', async () => {
+            await runGitAction('btnPull', 'Pull', '/api/git/pull');
+            await loadAll();
+        });
+
+        $('btnCommit').addEventListener('click', () => {
+            runGitAction('btnCommit', 'Commit', '/api/git/commit', {
+                message: $('commitMessage').value.trim(),
+                stageAll: $('stageAllCheck').checked,
+            });
+        });
+
+        $('btnPush').addEventListener('click', () => {
+            runGitAction('btnPush', 'Push', '/api/git/push');
+        });
+
+        $('btnSync').addEventListener('click', async () => {
+            await runGitAction('btnSync', 'Sync & Deploy', '/api/git/sync', {
+                message: $('commitMessage').value.trim(),
+                stageAll: $('stageAllCheck').checked,
+            });
+            $('commitMessage').value = '';
+            await loadAll();
+        });
+
+        $('btnDiscard').addEventListener('click', async () => {
+            if (!confirm('links.json の未コミット変更をすべて破棄して元に戻しますか？')) return;
+            await runGitAction('btnDiscard', '変更破棄', '/api/git/discard');
+        });
+
+        loadAll().catch((err) => {
+            appendLog(`初期読み込みエラー: ${err.message}`);
+            showToast('読み込みに失敗しました', true);
+        });
+    </script>
+</body>
+</html>

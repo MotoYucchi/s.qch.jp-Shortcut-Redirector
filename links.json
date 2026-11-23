@@ -1,10 +1,56 @@
 {
-    "ex": "https://example.com",
-    "moto": "https://motoyucchi.work",
-    "yy": "https://www.yamamoto-yuta.com",
-    "tello": "https://github.com/MotoYucchi/Tello-Drone-Web-Controller",
-    "github": "https://github.com/motoyucchi",
-    "c": "https://clock.qch.jp",
-    "m": "https://mucon.qch.jp",
-    "sitcrc2026matsushift": "https://docs.google.com/forms/d/e/1FAIpQLSdOAaINDIs5yv_cL-NTIBnc_0sVtGcQyQq5aAdZVhcCPEVwiA/viewform"
+    "ex": {
+        "url": "https://example.com",
+        "title": "Example",
+        "description": "テスト用リダイレクト",
+        "public": false
+    },
+    "moto": {
+        "url": "https://motoyucchi.work",
+        "title": "MotoYucchi",
+        "description": "MotoYucchi 公式サイト",
+        "public": true
+    },
+    "yy": {
+        "url": "https://www.yamamoto-yuta.com",
+        "title": "Yamamoto Yuta",
+        "description": "",
+        "public": false
+    },
+    "tello": {
+        "url": "https://github.com/MotoYucchi/Tello-Drone-Web-Controller",
+        "title": "Tello Drone Web Controller",
+        "description": "Tello ドローン Web コントローラー",
+        "public": true
+    },
+    "github": {
+        "url": "https://github.com/motoyucchi",
+        "title": "GitHub",
+        "description": "MotoYucchi GitHub プロフィール",
+        "public": true
+    },
+    "c": {
+        "url": "https://clock.qch.jp",
+        "title": "Clock",
+        "description": "clock.qch.jp",
+        "public": true
+    },
+    "m": {
+        "url": "https://mucon.qch.jp",
+        "title": "Mucon",
+        "description": "mucon.qch.jp",
+        "public": true
+    },
+    "ck": {
+        "url": "https://clipkit.qch.jp",
+        "title": "ClipKit",
+        "description": "clipkit.qch.jp",
+        "public": true
+    },
+    "sitcrc2026matsushift": {
+        "url": "https://docs.google.com/forms/d/e/1FAIpQLSdOAaINDIs5yv_cL-NTIBnc_0sVtGcQyQq5aAdZVhcCPEVwiA/viewform",
+        "title": "SITCRC 2026 シフトフォーム",
+        "description": "",
+        "public": false
+    }
 }
